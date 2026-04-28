@@ -196,9 +196,9 @@
     font-size: 12px;
     padding: 9px 18px;
     border-radius: 6px;
-    border: 1px solid var(--border-strong);
-    background: var(--surface);
-    color: var(--text);
+    border: 1px solid #C8C2B8;
+    background: #FFFFFF;
+    color: #1A1714;
     cursor: pointer;
     transition: all 0.15s;
     display: inline-flex;
@@ -207,15 +207,15 @@
     white-space: nowrap;
   }
 
-  .btn:hover { background: var(--bg); border-color: var(--accent); color: var(--accent); }
+  .btn:hover { background: #F7F5F0; border-color: #1A3A2A; color: #1A3A2A; }
 
   .btn-primary {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
+    background: #1A3A2A;
+    color: #ffffff;
+    border-color: #1A3A2A;
   }
 
-  .btn-primary:hover { background: var(--accent-light); border-color: var(--accent-light); color: #fff; }
+  .btn-primary:hover { background: #2D5E42; border-color: #2D5E42; color: #ffffff; }
 
   .btn-sm { font-size: 11px; padding: 6px 12px; }
 
@@ -968,28 +968,15 @@
       <div class="card">
         <div class="card-header">
           <span class="card-title">Work email — javiergc@innokap.com</span>
-          <span id="gmailStatusBadge" class="badge badge-fyi">Not connected</span>
+          <span class="badge" style="background:var(--accent);color:#fff;">Connected via Claude</span>
         </div>
-        <div class="card-body" style="display:flex;flex-direction:column;gap:12px;">
-          <div id="gmailConnectedView" style="display:none;">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-              <div>
-                <div style="font-size:12px;font-weight:500;color:var(--accent);">Connected to javiergc@innokap.com</div>
-                <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Niko can now scan your Innokap inbox directly.</div>
-              </div>
-              <button class="btn btn-sm" style="margin-left:auto;color:var(--red);" onclick="gmailDisconnect()">Disconnect</button>
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <div>
+              <div style="font-size:12px;font-weight:500;color:var(--accent);">javiergc@innokap.com connected via Claude Gmail connector</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Niko reads your Innokap inbox directly. Nothing is sent without your approval.</div>
             </div>
-          </div>
-          <div id="gmailDisconnectedView">
-            <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;line-height:1.6;">
-              Connect your Innokap work email so Niko can scan it independently — separate from your personal Claude account.<br>
-              <span style="color:var(--text-light);font-size:11px;">Only read access is requested. Niko never sends without your approval.</span>
-            </div>
-            <button class="btn btn-primary" onclick="gmailConnect()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              Connect javiergc@innokap.com
-            </button>
           </div>
         </div>
       </div>
@@ -1397,87 +1384,10 @@ function generateDownloadableFile(totals, date, totalAssets, totalDebt, leverage
   btn.onclick = () => { const a = document.createElement("a"); a.href = url; a.download = `Leverage_Pledges_${date.replace(/\s/g,"_")}.csv`; a.click(); };
 }
 
-// ─── GMAIL OAUTH ───────────────────────────────────────────────────
-const GMAIL_CLIENT_ID = "923111170710-ai1qvg0adanra7v3rr667u6c4nnmui32.apps.googleusercontent.com";
-const GMAIL_SCOPES = "https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.compose";
-const GMAIL_TOKEN_KEY = "niko_gmail_token";
+// ─── GMAIL (via Claude MCP connector) ──────────────────────────────
+let _gmailEmails = [];
 
-let _gmailEmails = []; // store last scan for emailToTask
-
-function gmailGetToken() {
-  try { return JSON.parse(localStorage.getItem(GMAIL_TOKEN_KEY)); } catch { return null; }
-}
-
-function gmailSaveToken(t) { localStorage.setItem(GMAIL_TOKEN_KEY, JSON.stringify(t)); }
-
-function gmailClearToken() { localStorage.removeItem(GMAIL_TOKEN_KEY); }
-
-function gmailIsConnected() {
-  const t = gmailGetToken();
-  return t && t.access_token && t.expires_at > Date.now();
-}
-
-function gmailUpdateUI() {
-  const connected = gmailIsConnected();
-  const badge = document.getElementById("gmailStatusBadge");
-  const connView = document.getElementById("gmailConnectedView");
-  const discView = document.getElementById("gmailDisconnectedView");
-  const scanBtn = document.querySelector("[onclick='loadEmails()']");
-
-  if (badge) {
-    badge.textContent = connected ? "Connected" : "Not connected";
-    badge.className = connected ? "badge badge-urgent" : "badge badge-fyi";
-    badge.style.background = connected ? "var(--accent)" : "";
-    badge.style.color = connected ? "#fff" : "";
-  }
-  if (connView) connView.style.display = connected ? "block" : "none";
-  if (discView) discView.style.display = connected ? "none" : "block";
-  if (scanBtn) {
-    scanBtn.title = connected ? "Scan javiergc@innokap.com" : "Connect work email in Settings first";
-  }
-}
-
-function gmailConnect() {
-  const params = new URLSearchParams({
-    client_id: GMAIL_CLIENT_ID,
-    redirect_uri: "https://jgorozpe.github.io/niko",
-    response_type: "token",
-    scope: GMAIL_SCOPES,
-    prompt: "consent",
-    login_hint: "javiergc@innokap.com"
-  });
-  const popup = window.open(
-    "https://accounts.google.com/o/oauth2/v2/auth?" + params.toString(),
-    "niko_gmail_auth",
-    "width=500,height=640,left=200,top=100"
-  );
-
-  // Poll for redirect with token
-  const poll = setInterval(() => {
-    try {
-      if (!popup || popup.closed) { clearInterval(poll); return; }
-      const url = popup.location.href;
-      if (url.includes("access_token")) {
-        clearInterval(poll);
-        popup.close();
-        const hash = new URLSearchParams(url.split("#")[1] || url.split("?")[1]);
-        const token = {
-          access_token: hash.get("access_token"),
-          expires_at: Date.now() + (parseInt(hash.get("expires_in") || "3600") * 1000)
-        };
-        gmailSaveToken(token);
-        gmailUpdateUI();
-        alert("✓ Niko is now connected to javiergc@innokap.com");
-      }
-    } catch(e) { /* cross-origin, keep polling */ }
-  }, 500);
-}
-
-function gmailDisconnect() {
-  if (!confirm("Disconnect javiergc@innokap.com from Niko?")) return;
-  gmailClearToken();
-  gmailUpdateUI();
-}
+function gmailUpdateUI() {} // no-op, kept for compatibility
 
 // ─── EMAIL → TASK ──────────────────────────────────────────────────
 function emailToTask(i, e) {
@@ -1524,12 +1434,10 @@ function emailToTask(i, e) {
   setTimeout(renderDashboard, 200);
 }
 
-// ─── GMAIL OAUTH ───────────────────────────────────────────────────
+// ─── EMAIL TRIAGE ──────────────────────────────────────────────────
 async function loadEmails() {
   const count = document.getElementById("emailCount").value;
-  if (gmailIsConnected()) return loadEmailsOAuth(count);
-
-  showStatus("emailStatus", "info", `Scanning last ${count} emails via Gmail MCP…`, true);
+  showStatus("emailStatus", "info", `Scanning last ${count} emails from javiergc@innokap.com…`, true);
   document.getElementById("emailPlaceholder").classList.add("hidden");
   document.getElementById("emailList").innerHTML = "";
   document.getElementById("emailSummaryRow").style.display = "none";
@@ -1540,94 +1448,43 @@ async function loadEmails() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: 1000,
+        max_tokens: 4000,
         mcp_servers: [{ type: "url", url: "https://gmailmcp.googleapis.com/mcp/v1", name: "gmail-mcp" }],
         messages: [{
           role: "user",
-          content: `Search my Gmail for the last ${count} emails. Return a JSON array ONLY:
-[{"from":"sender name","email":"sender@email.com","subject":"subject","time":"2h ago","preview":"first 100 chars","body":"first 400 chars","priority":"urgent|important|fyi","reason":"one sentence","draft":"3-5 sentence reply"}]
-Priority: urgent=action today, important=48h, fyi=informational. Return ONLY JSON.`
+          content: `You are Niko, assistant to an investment manager at Innokap Family Office. Search Gmail for the last ${count} emails in the inbox. For each email, triage and draft a response. Return a JSON array ONLY (no other text):
+[{
+  "from": "sender name",
+  "email": "sender@email.com",
+  "subject": "subject line",
+  "time": "relative time like '2h ago' or 'Yesterday'",
+  "preview": "first 100 chars of body",
+  "body": "first 400 chars of body",
+  "priority": "urgent|important|fyi",
+  "reason": "one sentence why this priority",
+  "draft": "professional 3-5 sentence reply in formal investment manager tone. Empty string if FYI only."
+}]
+
+Priority rules:
+- urgent: action required today — margin calls, regulatory deadlines, counterparty requests with hard deadlines
+- important: response needed within 48h — KYC, operational, relationship management
+- fyi: newsletters, confirmations, informational only
+
+Return ONLY valid JSON array, no markdown.`
         }]
       })
     });
     const data = await response.json();
     const textBlock = data.content?.find(b => b.type === "text");
     let emails = [];
-    if (textBlock?.text) { try { emails = JSON.parse(textBlock.text.replace(/```json|```/g,"").trim()); } catch(e) {} }
+    if (textBlock?.text) {
+      try { emails = JSON.parse(textBlock.text.replace(/```json|```/g,"").trim()); } catch(e) {}
+    }
     if (!emails.length) throw new Error("No emails parsed");
     renderEmails(emails);
     hideStatus("emailStatus");
-  } catch (err) { demoEmails(); }
-}
-
-async function loadEmailsOAuth(count) {
-  showStatus("emailStatus", "info", `Connecting to javiergc@innokap.com…`, true);
-  document.getElementById("emailPlaceholder").classList.add("hidden");
-  document.getElementById("emailList").innerHTML = "";
-  document.getElementById("emailSummaryRow").style.display = "none";
-
-  try {
-    const token = gmailGetToken();
-    const listRes = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=${count}&q=in:inbox`, {
-      headers: { Authorization: `Bearer ${token.access_token}` }
-    });
-    const listData = await listRes.json();
-    if (listData.error) throw new Error(listData.error.message);
-    const messages = listData.messages || [];
-
-    showStatus("emailStatus", "info", `Fetching ${messages.length} emails…`, true);
-    const rawEmails = await Promise.all(messages.map(async m => {
-      const res = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=full`, {
-        headers: { Authorization: `Bearer ${token.access_token}` }
-      });
-      return res.json();
-    }));
-
-    const parsed = rawEmails.map(msg => {
-      const headers = msg.payload?.headers || [];
-      const get = name => headers.find(h => h.name.toLowerCase()===name.toLowerCase())?.value||"";
-      const fromRaw = get("From");
-      const fromName = fromRaw.replace(/<.*>/,"").trim()||fromRaw;
-      const fromEmail = (fromRaw.match(/<(.+)>/)||[])[1]||fromRaw;
-      const subject = get("Subject")||"(no subject)";
-      const date = new Date(parseInt(msg.internalDate));
-      const diffH = Math.round((Date.now()-date)/3600000);
-      const time = diffH<1?"Just now":diffH<24?`${diffH}h ago`:diffH<48?"Yesterday":date.toLocaleDateString("en-GB",{day:"numeric",month:"short"});
-      let body = "";
-      const extractBody = part => {
-        if (part.mimeType==="text/plain"&&part.body?.data) body=atob(part.body.data.replace(/-/g,"+").replace(/_/g,"/"));
-        if (part.parts) part.parts.forEach(extractBody);
-      };
-      extractBody(msg.payload);
-      body = body.replace(/\s+/g," ").trim().slice(0,400);
-      return { from:fromName, email:fromEmail, subject, time, preview:body.slice(0,100), body, priority:"fyi", reason:"", draft:"" };
-    });
-
-    showStatus("emailStatus", "info", "Niko is triaging and drafting responses…", true);
-    const triageRes = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: MODEL, max_tokens: 4000,
-        messages: [{ role: "user", content: `You are Niko, assistant to an investment manager at Innokap Family Office. Triage these emails. Return ONLY a JSON array in the same order:
-[{"priority":"urgent|important|fyi","reason":"one sentence","draft":"3-5 sentence formal reply, empty string if FYI"}]
-
-Emails:
-${parsed.map((e,i)=>`[${i}] From: ${e.from} <${e.email}>\nSubject: ${e.subject}\nBody: ${e.body}`).join("\n\n")}
-
-Rules: urgent=action today/margins/deadlines, important=48h/KYC/operational, fyi=newsletters/confirmations. Return ONLY valid JSON array.` }]
-      })
-    });
-    const triageData = await triageRes.json();
-    const textBlock = triageData.content?.find(b=>b.type==="text");
-    let triage = [];
-    if (textBlock?.text) { try { triage = JSON.parse(textBlock.text.replace(/```json|```/g,"").trim()); } catch(e) {} }
-
-    const final = parsed.map((e,i)=>({...e, priority:triage[i]?.priority||"fyi", reason:triage[i]?.reason||"", draft:triage[i]?.draft||""}));
-    renderEmails(final);
-    hideStatus("emailStatus");
-  } catch(err) {
-    showStatus("emailStatus", "error", `Error: ${err.message}. Loading demo instead.`);
+  } catch (err) {
+    showStatus("emailStatus", "error", `Could not scan inbox. Loading demo data.`);
     setTimeout(demoEmails, 1500);
   }
 }
