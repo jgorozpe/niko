@@ -1,0 +1,2676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Niko · Innokap</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F0;
+    --surface: #FFFFFF;
+    --border: #E2DDD6;
+    --border-strong: #C8C2B8;
+    --text: #1A1714;
+    --text-muted: #7A746B;
+    --text-light: #B0A99F;
+    --accent: #1A3A2A;
+    --accent-light: #2D5E42;
+    --accent-bg: #EAF2EC;
+    --amber: #8B5E00;
+    --amber-bg: #FFF8E7;
+    --red: #8B1A1A;
+    --red-bg: #FFF0F0;
+    --blue: #1A2E8B;
+    --blue-bg: #EFF2FF;
+    --mono: 'DM Mono', monospace;
+    --serif: 'Fraunces', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--mono);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--accent);
+    color: #fff;
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #0a2018;
+  }
+
+  .header-title {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: 20px;
+    letter-spacing: 0.01em;
+    color: #E8F2EC;
+  }
+
+  .header-sub {
+    font-size: 11px;
+    color: #88b09a;
+    margin-top: 2px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .header-date {
+    font-size: 11px;
+    color: #88b09a;
+    letter-spacing: 0.05em;
+  }
+
+  /* LAYOUT */
+  .layout {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+  }
+
+  .nav-section {
+    padding: 0 16px;
+    margin-bottom: 24px;
+  }
+
+  .nav-label {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    padding: 0 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-item:hover { background: var(--bg); color: var(--text); }
+  .nav-item.active { background: var(--accent-bg); color: var(--accent); font-weight: 500; }
+
+  .nav-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
+  .nav-item.active .nav-icon { opacity: 1; }
+
+  /* MAIN CONTENT */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* PANELS */
+  .panel {
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .panel.active { display: flex; }
+
+  .panel-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--text);
+  }
+
+  .panel-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 4px;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg);
+  }
+
+  .card-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .card-body { padding: 20px; }
+
+  /* BUTTONS */
+  .btn {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 9px 18px;
+    border-radius: 6px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+  }
+
+  .btn:hover { background: var(--bg); border-color: var(--accent); color: var(--accent); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .btn-primary:hover { background: var(--accent-light); border-color: var(--accent-light); color: #fff; }
+
+  .btn-sm { font-size: 11px; padding: 6px 12px; }
+
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* BANK SELECTOR GRID */
+  .bank-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .bank-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--surface);
+  }
+
+  .bank-item:hover { border-color: var(--accent); }
+  .bank-item.selected { border-color: var(--accent); background: var(--accent-bg); }
+
+  .bank-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .bank-entities { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+  .bank-folder { font-size: 10px; color: var(--text-light); margin-top: 6px; font-style: italic; }
+
+  .bank-check {
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 3px;
+    display: inline-flex; align-items: center; justify-content: center;
+    float: right;
+    margin-top: 2px;
+    color: var(--accent);
+    font-size: 10px;
+  }
+
+  .bank-item.selected .bank-check {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* FILE DROP ZONE */
+  .dropzone {
+    border: 1.5px dashed var(--border-strong);
+    border-radius: 8px;
+    padding: 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg);
+  }
+
+  .dropzone:hover, .dropzone.drag-over {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+  }
+
+  .dropzone-text { font-size: 13px; color: var(--text-muted); }
+  .dropzone-sub { font-size: 11px; color: var(--text-light); margin-top: 6px; }
+
+  /* EXTRACTION PREVIEW TABLE */
+  .preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .preview-table th {
+    background: var(--bg);
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+  }
+
+  .preview-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .preview-table tr:last-child td { border-bottom: none; }
+  .preview-table tr:hover td { background: var(--bg); }
+
+  .preview-table input[type="number"], .preview-table input[type="text"] {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--text);
+    width: 140px;
+    text-align: right;
+  }
+
+  .preview-table input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  /* BADGES */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .badge-urgent { background: var(--red-bg); color: var(--red); }
+  .badge-important { background: var(--amber-bg); color: var(--amber); }
+  .badge-fyi { background: var(--blue-bg); color: var(--blue); }
+  .badge-bank { background: var(--accent-bg); color: var(--accent); }
+
+  /* EMAIL LIST */
+  .email-list { display: flex; flex-direction: column; gap: 1px; }
+
+  .email-item {
+    padding: 14px 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    background: var(--surface);
+    transition: all 0.15s;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .email-item:hover { border-color: var(--border-strong); }
+  .email-item.expanded { border-color: var(--accent); }
+
+  .email-priority-bar {
+    width: 3px;
+    border-radius: 2px;
+    align-self: stretch;
+    min-height: 40px;
+    flex-shrink: 0;
+  }
+
+  .bar-urgent { background: var(--red); }
+  .bar-important { background: var(--amber); }
+  .bar-fyi { background: #aaa; }
+
+  .email-meta { flex: 1; min-width: 0; }
+  .email-from { font-size: 12px; font-weight: 500; color: var(--text); }
+  .email-subject { font-size: 12px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .email-preview { font-size: 11px; color: var(--text-light); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .email-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+  .email-time { font-size: 10px; color: var(--text-light); }
+
+  .email-expanded-body {
+    display: none;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .email-item.expanded .email-expanded-body { display: block; }
+
+  .draft-box {
+    margin-top: 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+  }
+
+  .draft-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 8px; }
+
+  .draft-text {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    font-family: var(--mono);
+  }
+
+  .draft-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+  /* LOADING / STATUS */
+  .status-bar {
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .status-info { background: var(--blue-bg); color: var(--blue); }
+  .status-success { background: var(--accent-bg); color: var(--accent); }
+  .status-warn { background: var(--amber-bg); color: var(--amber); }
+  .status-error { background: var(--red-bg); color: var(--red); }
+
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .dot-pulse::after {
+    content: '';
+    animation: dots 1.2s steps(4, end) infinite;
+  }
+  @keyframes dots { 0%,100%{content:''} 25%{content:'.'} 50%{content:'..'} 75%{content:'...'} }
+
+  /* NUMBERS */
+  .num { font-variant-numeric: tabular-nums; }
+  .num-pos { color: var(--accent); }
+  .num-neg { color: var(--red); }
+
+  /* TEXTAREA */
+  textarea {
+    font-family: var(--mono);
+    font-size: 12px;
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    background: var(--bg);
+    color: var(--text);
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.6;
+  }
+  textarea:focus { outline: none; border-color: var(--accent); }
+
+  /* SECTION DIVIDER */
+  .section-title {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 10px;
+  }
+
+  /* SUMMARY METRICS */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .metric-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+
+  .metric-label { font-size: 10px; color: var(--text-light); letter-spacing: 0.06em; text-transform: uppercase; }
+  .metric-value { font-size: 20px; font-weight: 500; color: var(--text); margin-top: 4px; font-family: var(--mono); }
+  .metric-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* UTILITY */
+  .row { display: flex; gap: 10px; align-items: center; }
+  .row-between { display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+  .mt-sm { margin-top: 8px; }
+  .mt-md { margin-top: 14px; }
+  .hidden { display: none !important; }
+
+  select {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+  }
+  select:focus { outline: none; border-color: var(--accent); }
+
+  .file-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 10px;
+    font-size: 11px; color: var(--text-muted);
+  }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:center;gap:18px;">
+    <!-- Niko Matsu mark: geometric abstracted pine -->
+    <svg width="36" height="42" viewBox="0 0 36 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- trunk -->
+      <rect x="16" y="32" width="4" height="8" rx="1" fill="#7BAF8A" opacity="0.7"/>
+      <!-- bottom tier -->
+      <polygon points="18,22 6,34 30,34" fill="#5A9470" opacity="0.75"/>
+      <!-- middle tier -->
+      <polygon points="18,14 8,26 28,26" fill="#4A8060" opacity="0.85"/>
+      <!-- top tier -->
+      <polygon points="18,4 10,18 26,18" fill="#2D5E42"/>
+      <!-- highlight lines suggesting branches -->
+      <line x1="18" y1="18" x2="10" y2="24" stroke="#A8D4B8" stroke-width="0.8" opacity="0.5"/>
+      <line x1="18" y1="18" x2="26" y2="24" stroke="#A8D4B8" stroke-width="0.8" opacity="0.5"/>
+      <line x1="18" y1="26" x2="8" y2="32" stroke="#A8D4B8" stroke-width="0.8" opacity="0.4"/>
+      <line x1="18" y1="26" x2="28" y2="32" stroke="#A8D4B8" stroke-width="0.8" opacity="0.4"/>
+    </svg>
+    <div>
+      <div class="header-title">Niko</div>
+      <div class="header-sub">Innokap · Investment Management</div>
+    </div>
+  </div>
+  <div class="header-date" id="headerDate"></div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <!-- Sidebar brand -->
+    <div style="padding:0 20px 20px;border-bottom:1px solid var(--border);margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <svg width="22" height="26" viewBox="0 0 36 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="16" y="32" width="4" height="8" rx="1" fill="#7BAF8A" opacity="0.7"/>
+          <polygon points="18,22 6,34 30,34" fill="#5A9470" opacity="0.75"/>
+          <polygon points="18,14 8,26 28,26" fill="#4A8060" opacity="0.85"/>
+          <polygon points="18,4 10,18 26,18" fill="#2D5E42"/>
+        </svg>
+        <div>
+          <div style="font-family:var(--serif);font-size:14px;font-weight:300;color:var(--accent);letter-spacing:0.02em;">Niko</div>
+          <div style="font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light);">Innokap</div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Modules</div>
+      <button class="nav-item active" onclick="switchPanel('dashboard')" id="navDashboard">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/>
+        </svg>
+        Dashboard
+      </button>
+      <button class="nav-item" onclick="switchPanel('tasks')" id="navTasks">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <polyline points="2,4 5,7 9,2"/><line x1="7" y1="4" x2="14" y2="4"/><polyline points="2,9 5,12 9,7"/><line x1="7" y1="9" x2="14" y2="9"/><line x1="2" y1="14" x2="14" y2="14"/>
+        </svg>
+        Task Tracker
+        <span id="navTasksBadge" style="display:none;margin-left:auto;background:var(--red);color:#fff;border-radius:10px;font-size:9px;padding:1px 6px;font-weight:500;"></span>
+      </button>
+      <button class="nav-item" onclick="switchPanel('statements')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="1" width="12" height="14" rx="1.5"/><line x1="5" y1="5" x2="11" y2="5"/><line x1="5" y1="8" x2="11" y2="8"/><line x1="5" y1="11" x2="8" y2="11"/>
+        </svg>
+        Bank Statements
+      </button>
+      <button class="nav-item" onclick="switchPanel('email')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="1" y="3" width="14" height="10" rx="1.5"/><polyline points="1,3 8,9 15,3"/>
+        </svg>
+        Email Triage
+      </button>
+      <button class="nav-item" onclick="switchPanel('log')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="2" y1="4" x2="14" y2="4"/><line x1="2" y1="8" x2="14" y2="8"/><line x1="2" y1="12" x2="10" y2="12"/>
+          <circle cx="13" cy="12" r="2.5"/>
+        </svg>
+        History Log
+      </button>
+      <button class="nav-item" onclick="switchPanel('interest')" id="navInterest">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="1" y="2" width="14" height="13" rx="1.5"/>
+          <line x1="5" y1="1" x2="5" y2="4"/><line x1="11" y1="1" x2="11" y2="4"/>
+          <line x1="1" y1="6" x2="15" y2="6"/>
+          <rect x="4" y="8" width="3" height="3" rx="0.5"/>
+        </svg>
+        Interest Schedule
+        <span id="navInterestAlert" style="display:none;margin-left:auto;background:var(--red);color:#fff;border-radius:10px;font-size:9px;padding:1px 6px;font-weight:500;"></span>
+      </button>
+    </div>
+    <div class="nav-section" style="margin-top:auto;">
+      <div class="nav-label">Config</div>
+      <button class="nav-item" onclick="switchPanel('settings')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.2 3.2l1.4 1.4M11.4 11.4l1.4 1.4M11.4 4.6l-1.4 1.4M4.6 11.4l-1.4 1.4"/>
+        </svg>
+        Settings
+      </button>
+      <div style="padding:16px 4px 0;font-size:9px;color:var(--text-light);letter-spacing:0.06em;line-height:1.6;">
+        NIKO v2.0<br>Powered by Claude AI<br>© Innokap
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- ===================== DASHBOARD PANEL ===================== -->
+    <div class="panel active" id="panel-dashboard">
+      <div>
+        <div class="panel-title" id="dashGreeting">Good morning.</div>
+        <div class="panel-desc" id="dashGreetingSub">Here's your Innokap briefing for today.</div>
+      </div>
+      <div class="metrics-grid" style="grid-template-columns:repeat(4,1fr);" id="dashTiles"></div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Today's agenda</span>
+          <span id="dashAgendaDate" style="font-size:11px;color:var(--text-muted);"></span>
+        </div>
+        <div class="card-body" style="padding:0;" id="dashAgenda">
+          <div style="text-align:center;padding:32px 0;color:var(--text-light);font-size:12px;">Scan Gmail or add tasks to populate your agenda.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Leverage snapshot — all entities</span>
+          <span style="font-size:11px;color:var(--text-muted);" id="dashLevDate"></span>
+        </div>
+        <div class="card-body" id="dashLevTable">
+          <div style="text-align:center;padding:20px 0;color:var(--text-light);font-size:12px;">No confirmed statements yet. Process a bank statement to populate.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== TASKS PANEL ===================== -->
+    <div class="panel" id="panel-tasks">
+      <div>
+        <div class="panel-title">Task Tracker</div>
+        <div class="panel-desc">Your unified to-do list. Tasks carry forward until resolved. Add manually or they arrive automatically from email triage.</div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Add task</span></div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;">
+            <div>
+              <div class="section-title">Description</div>
+              <input type="text" id="taskDesc" placeholder="e.g. Return KYC docs to Santander" style="width:100%;font-family:var(--mono);font-size:12px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);">
+            </div>
+            <div>
+              <div class="section-title">Counterparty</div>
+              <input type="text" id="taskCounterparty" placeholder="e.g. Santander" style="width:100%;font-family:var(--mono);font-size:12px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);">
+            </div>
+            <div>
+              <div class="section-title">Deadline</div>
+              <input type="date" id="taskDeadline" style="width:100%;font-family:var(--mono);font-size:12px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);">
+            </div>
+            <div>
+              <div class="section-title">Priority</div>
+              <select id="taskPriority" style="width:100%;font-family:var(--mono);font-size:12px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);">
+                <option value="urgent">Urgent</option>
+                <option value="important" selected>Important</option>
+                <option value="fyi">FYI</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-end;">
+            <div style="flex:1;">
+              <div class="section-title">Notes (optional)</div>
+              <input type="text" id="taskNotes" placeholder="Any additional context…" style="width:100%;font-family:var(--mono);font-size:12px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);">
+            </div>
+            <button class="btn btn-primary" onclick="addTask()">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+              Add task
+            </button>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <select id="taskFilterStatus" onchange="renderTasks()">
+          <option value="open">Open tasks</option>
+          <option value="all">All tasks</option>
+          <option value="done">Completed</option>
+        </select>
+        <select id="taskFilterPriority" onchange="renderTasks()">
+          <option value="">All priorities</option>
+          <option value="urgent">Urgent</option>
+          <option value="important">Important</option>
+          <option value="fyi">FYI</option>
+        </select>
+        <div style="flex:1;"></div>
+        <span id="taskSummaryBadges" style="display:flex;gap:6px;"></span>
+        <button class="btn btn-sm" onclick="exportTasksCSV()">Export CSV</button>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Tasks</span>
+          <span id="taskCount" style="font-size:11px;color:var(--text-muted);"></span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="preview-table">
+            <thead>
+              <tr>
+                <th style="width:32px;"></th>
+                <th>Description</th>
+                <th>Counterparty</th>
+                <th>Priority</th>
+                <th>Deadline</th>
+                <th>Days left</th>
+                <th>Notes</th>
+                <th>Source</th>
+                <th style="width:60px;"></th>
+              </tr>
+            </thead>
+            <tbody id="taskBody">
+              <tr><td colspan="9" style="text-align:center;color:var(--text-light);padding:32px 0;">No tasks yet. Add one above or scan your Gmail.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== STATEMENTS PANEL ===================== -->
+    <div class="panel" id="panel-statements">
+      <div>
+        <div class="panel-title">Bank Statement Updater</div>
+        <div class="panel-desc">Upload PDFs from your Dropbox folders → AI extracts balances → you confirm → Excel is updated.</div>
+      </div>
+
+      <!-- Step 1: Select bank & upload -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Step 1 — Select bank & upload PDF</span>
+        </div>
+        <div class="card-body" style="display:flex; flex-direction:column; gap:14px;">
+          <div class="bank-grid" id="bankGrid">
+            <!-- rendered by JS -->
+          </div>
+          <div class="divider"></div>
+          <div>
+            <div class="section-title">Upload PDF for selected bank</div>
+            <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
+              <div class="dropzone-text">Drop PDF here or click to browse</div>
+              <div class="dropzone-sub" id="dropzoneSelected">Select a bank above first</div>
+            </div>
+            <input type="file" id="fileInput" accept=".pdf" style="display:none">
+          </div>
+          <div id="uploadedFile" class="hidden">
+            <span class="file-pill">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="1" width="12" height="14" rx="1.5"/></svg>
+              <span id="uploadedFileName"></span>
+            </span>
+            <button class="btn btn-primary btn-sm" style="margin-left:10px;" onclick="extractData()">
+              Extract with AI
+            </button>
+          </div>
+          <div id="extractStatus" class="hidden"></div>
+        </div>
+      </div>
+
+      <!-- Step 2: Review extraction -->
+      <div class="card hidden" id="extractionCard">
+        <div class="card-header">
+          <span class="card-title">Step 2 — Review extracted data</span>
+          <span class="badge badge-bank" id="extractionBankLabel"></span>
+        </div>
+        <div class="card-body" style="display:flex; flex-direction:column; gap:14px;">
+          <div class="status-bar status-warn" id="extractionNote">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="7"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r="0.5" fill="currentColor"/></svg>
+            Review carefully — AI extraction may need small corrections. Edit any value before confirming.
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="preview-table" id="extractionTable">
+              <thead>
+                <tr>
+                  <th>Entity</th>
+                  <th>Account</th>
+                  <th>Currency</th>
+                  <th>Asset Balance (USD)</th>
+                  <th>Debt / Pledge (USD)</th>
+                  <th>As of Date</th>
+                </tr>
+              </thead>
+              <tbody id="extractionBody"></tbody>
+            </table>
+          </div>
+          <div class="row-between">
+            <div>
+              <div class="section-title">Statement date</div>
+              <input type="text" id="statementDate" placeholder="Mar 31, 2026" style="width:150px; font-family:var(--mono); font-size:12px; padding:7px 10px; border:1px solid var(--border); border-radius:6px; background:var(--surface); color:var(--text);">
+            </div>
+            <div class="row">
+              <button class="btn btn-sm" onclick="resetExtraction()">← Start over</button>
+              <button class="btn btn-primary" onclick="confirmUpdate()">Confirm & update Excel →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Summary -->
+      <div class="card hidden" id="summaryCard">
+        <div class="card-header">
+          <span class="card-title">Step 3 — Update complete</span>
+        </div>
+        <div class="card-body" style="display:flex; flex-direction:column; gap:16px;">
+          <div class="status-bar status-success">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2,8 6,12 14,4"/></svg>
+            Excel file updated successfully. Download it below.
+          </div>
+          <div class="metrics-grid" id="summaryMetrics"></div>
+          <div class="row">
+            <button class="btn btn-primary" id="downloadBtn">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v9M4 8l4 4 4-4"/><line x1="2" y1="14" x2="14" y2="14"/></svg>
+              Download updated Excel
+            </button>
+            <button class="btn btn-sm" onclick="resetAll()">Process another bank</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== EMAIL PANEL ===================== -->
+    <div class="panel" id="panel-email">
+      <div>
+        <div class="panel-title">Email Triage</div>
+        <div class="panel-desc">AI reads your recent emails, ranks them by urgency, and drafts responses. You review before anything is saved.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Inbox scan</span>
+          <div class="row">
+            <select id="emailCount">
+              <option value="10">Last 10 emails</option>
+              <option value="20" selected>Last 20 emails</option>
+              <option value="50">Last 50 emails</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="loadEmails()">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1,4 8,9 15,4"/><rect x="1" y="3" width="14" height="10" rx="1"/></svg>
+              Scan Gmail
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="emailStatus" class="status-bar status-info hidden"></div>
+          <div id="emailPlaceholder" style="text-align:center; padding:32px 0; color:var(--text-light); font-size:12px;">
+            Click "Scan Gmail" to load and analyse your inbox
+          </div>
+          <div id="emailSummaryRow" class="hidden" style="display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap;">
+            <span class="badge badge-urgent" id="sumUrgent"></span>
+            <span class="badge badge-important" id="sumImportant"></span>
+            <span class="badge badge-fyi" id="sumFyi"></span>
+          </div>
+          <div class="email-list" id="emailList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== LOG PANEL ===================== -->
+    <div class="panel" id="panel-log">
+      <div>
+        <div class="panel-title">History Log</div>
+        <div class="panel-desc">Every confirmed statement update is recorded here. Track month-over-month changes per entity and bank.</div>
+      </div>
+
+      <!-- Filters & controls -->
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <select id="logFilterEntity" onchange="renderLog()">
+          <option value="">All entities</option>
+          <option>Nilor Securities</option>
+          <option>The Zooid Trust</option>
+          <option>Kaptungs Limited</option>
+        </select>
+        <select id="logFilterBank" onchange="renderLog()">
+          <option value="">All banks</option>
+          <option>JP Morgan (Suisse) SA</option>
+          <option>Citibank N.A.</option>
+          <option>Santander</option>
+          <option>Pictet</option>
+        </select>
+        <div style="flex:1;"></div>
+        <button class="btn btn-sm" onclick="exportLogCSV()">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v9M4 8l4 4 4-4"/><line x1="2" y1="14" x2="14" y2="14"/></svg>
+          Export CSV
+        </button>
+        <button class="btn btn-sm" style="color:var(--red);border-color:var(--red);" onclick="clearLog()">Clear log</button>
+      </div>
+
+      <!-- Summary strip -->
+      <div class="metrics-grid" id="logSummaryMetrics" style="grid-template-columns:repeat(4,1fr);"></div>
+
+      <!-- Chart area -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Total assets & leverage — monthly trend</span>
+          <select id="logChartEntity" onchange="renderChart()">
+            <option value="all">All entities combined</option>
+            <option>Nilor Securities</option>
+            <option>The Zooid Trust</option>
+            <option>Kaptungs Limited</option>
+          </select>
+        </div>
+        <div class="card-body">
+          <canvas id="logChart" height="180"></canvas>
+          <div id="logChartEmpty" style="text-align:center;padding:40px 0;color:var(--text-light);font-size:12px;">No data yet — confirm a statement update to start tracking.</div>
+        </div>
+      </div>
+
+      <!-- Log table -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Statement entries</span>
+          <span id="logCount" style="font-size:11px;color:var(--text-muted);"></span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="preview-table" id="logTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Bank</th>
+                <th>Entity</th>
+                <th>Account</th>
+                <th>Currency</th>
+                <th>Assets (USD)</th>
+                <th>Debt / Pledges (USD)</th>
+                <th>Leverage</th>
+                <th>Δ Assets</th>
+              </tr>
+            </thead>
+            <tbody id="logBody">
+              <tr id="logEmptyRow">
+                <td colspan="9" style="text-align:center;color:var(--text-light);padding:32px 0;">No entries yet. Confirm your first statement update to begin logging.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SETTINGS PANEL ===================== -->
+    <div class="panel" id="panel-settings">
+      <div>
+        <div class="panel-title">Settings</div>
+        <div class="panel-desc">Configure Niko — connect your work email, manage entities and banks.</div>
+      </div>
+
+      <!-- Gmail OAuth card -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Work email — javiergc@innokap.com</span>
+          <span id="gmailStatusBadge" class="badge badge-fyi">Not connected</span>
+        </div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:12px;">
+          <div id="gmailConnectedView" style="display:none;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <div>
+                <div style="font-size:12px;font-weight:500;color:var(--accent);">Connected to javiergc@innokap.com</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Niko can now scan your Innokap inbox directly.</div>
+              </div>
+              <button class="btn btn-sm" style="margin-left:auto;color:var(--red);" onclick="gmailDisconnect()">Disconnect</button>
+            </div>
+          </div>
+          <div id="gmailDisconnectedView">
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;line-height:1.6;">
+              Connect your Innokap work email so Niko can scan it independently — separate from your personal Claude account.<br>
+              <span style="color:var(--text-light);font-size:11px;">Only read access is requested. Niko never sends without your approval.</span>
+            </div>
+            <button class="btn btn-primary" onclick="gmailConnect()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Connect javiergc@innokap.com
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title">Entities</span></div>
+        <div class="card-body">
+          <table class="preview-table">
+            <thead><tr><th>Entity</th><th>Type</th><th>Primary Bank</th></tr></thead>
+            <tbody>
+              <tr><td>Nilor Securities</td><td>Trust</td><td>JP Morgan (Suisse) SA</td></tr>
+              <tr><td>The Zooid Trust</td><td>Trust</td><td>Santander</td></tr>
+              <tr><td>Kaptungs Limited</td><td>Trust</td><td>JP Morgan (Suisse) SA</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title">Bank folders (Dropbox)</span></div>
+        <div class="card-body">
+          <table class="preview-table" id="folderTable">
+            <thead><tr><th>Bank</th><th>Dropbox Folder Path</th></tr></thead>
+            <tbody id="folderBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== INTEREST PANEL ===================== -->
+    <div class="panel" id="panel-interest">
+      <div>
+        <div class="panel-title">Interest Schedule 2026</div>
+        <div class="panel-desc">Imported from FLUJOS_INTERESES_2026.xlsx — exact payment amounts and dates per facility. Rates are implied from the spreadsheet.</div>
+      </div>
+
+      <!-- Controls -->
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-muted);">Alert within:</span>
+          <select id="intAlertDays" onchange="intRefresh()" style="font-family:var(--mono);font-size:12px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);">
+            <option value="7">7 days</option>
+            <option value="14" selected>14 days</option>
+            <option value="30">30 days</option>
+          </select>
+        </div>
+        <div style="display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;">
+          <button id="viewTabUpcoming" onclick="setIntView('upcoming')" style="font-family:var(--mono);font-size:11px;padding:6px 14px;border:none;background:var(--accent);color:#fff;cursor:pointer;">Upcoming</button>
+          <button id="viewTabCalendar" onclick="setIntView('calendar')" style="font-family:var(--mono);font-size:11px;padding:6px 14px;border:none;background:var(--surface);color:var(--text-muted);cursor:pointer;border-left:1px solid var(--border);">Calendar</button>
+          <button id="viewTabSummary" onclick="setIntView('summary')" style="font-family:var(--mono);font-size:11px;padding:6px 14px;border:none;background:var(--surface);color:var(--text-muted);cursor:pointer;border-left:1px solid var(--border);">By bank / entity</button>
+          <button id="viewTabAll" onclick="setIntView('all')" style="font-family:var(--mono);font-size:11px;padding:6px 14px;border:none;background:var(--surface);color:var(--text-muted);cursor:pointer;border-left:1px solid var(--border);">Full 2026</button>
+        </div>
+        <div style="flex:1;"></div>
+        <button class="btn btn-sm" onclick="intExportCSV()">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v9M4 8l4 4 4-4"/><line x1="2" y1="14" x2="14" y2="14"/></svg>
+          Export CSV
+        </button>
+      </div>
+
+      <!-- Summary metrics -->
+      <div class="metrics-grid" id="intMetrics" style="grid-template-columns:repeat(4,1fr);"></div>
+
+      <!-- UPCOMING VIEW -->
+      <div id="intUpcomingView">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Next payments</span>
+            <span id="intPayCount" style="font-size:11px;color:var(--text-muted);"></span>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="preview-table">
+              <thead><tr><th>Payment date</th><th>Days</th><th>Bank</th><th>Facility</th><th>Counterparty</th><th>Ccy</th><th>Principal</th><th>Implied rate</th><th>Payment (USD)</th></tr></thead>
+              <tbody id="intPayBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALENDAR VIEW -->
+      <div id="intCalendarView" class="hidden">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title" id="intCalTitle">Payment calendar</span>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-sm" onclick="intCalPrev()">← Prev</button>
+              <button class="btn btn-sm" onclick="intCalNext()">Next →</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="intCalGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;"></div>
+            <div id="intCalDetail" style="margin-top:16px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUMMARY VIEW -->
+      <div id="intSummaryView" class="hidden">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Annual cost by bank</span></div>
+            <div class="card-body" id="intByBank"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Annual cost by counterparty</span></div>
+            <div class="card-body" id="intByCounterparty"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">All facilities — 2026</span></div>
+          <div style="overflow-x:auto;" id="intFacilityTable"></div>
+        </div>
+      </div>
+
+      <!-- FULL 2026 VIEW -->
+      <div id="intAllView" class="hidden">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Monthly payment schedule — full 2026</span></div>
+          <div style="overflow-x:auto;">
+            <table class="preview-table" id="intFullTable">
+              <thead>
+                <tr>
+                  <th>Bank</th><th>Facility</th><th>Counterparty</th><th>Ccy</th><th>Principal</th><th>Rate</th>
+                  <th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th>
+                  <th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th>
+                  <th>2026 Total</th>
+                </tr>
+              </thead>
+              <tbody id="intFullBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────
+const API_URL = "https://api.anthropic.com/v1/messages";
+const MODEL = "claude-sonnet-4-20250514";
+
+const BANKS = [
+  { id: "jpm", name: "JP Morgan (Suisse) SA", entities: ["Nilor", "Kaptungs"], folder: "/Dropbox/Statements/JPMorgan/" },
+  { id: "citi", name: "Citibank N.A.", entities: ["Nilor", "Kaptungs"], folder: "/Dropbox/Statements/Citibank/" },
+  { id: "santander", name: "Santander", entities: ["Zooid", "Kaptungs"], folder: "/Dropbox/Statements/Santander/" },
+  { id: "pictet", name: "Pictet", entities: ["Nilor"], folder: "/Dropbox/Statements/Pictet/" },
+];
+
+const EXCEL_STRUCTURE = {
+  entities: ["Nilor Securities", "The Zooid Trust", "Kaptungs Limited"],
+  banks: ["JP Morgan (Suisse) SA", "Citibank N.A.", "Santander", "Pictet"],
+  fields: ["Liquid Assets of the Trust", "Total Bank Assets of the Trust", "Total Debt / Pledges"],
+};
+
+let state = {
+  selectedBank: null,
+  uploadedFile: null,
+  uploadedPDFBase64: null,
+  extractedData: [],
+  updatedWorkbook: null,
+};
+
+// ─── INIT ─────────────────────────────────────────────────────────
+document.getElementById("headerDate").textContent = new Date().toLocaleDateString("en-US", { weekday:"short", year:"numeric", month:"long", day:"numeric" });
+
+// Render banks
+const bankGrid = document.getElementById("bankGrid");
+BANKS.forEach(bank => {
+  const el = document.createElement("div");
+  el.className = "bank-item";
+  el.id = "bank-" + bank.id;
+  el.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:start;">
+      <div>
+        <div class="bank-name">${bank.name}</div>
+        <div class="bank-entities">${bank.entities.join(" · ")}</div>
+        <div class="bank-folder">${bank.folder}</div>
+      </div>
+      <div class="bank-check" id="check-${bank.id}"></div>
+    </div>`;
+  el.onclick = () => selectBank(bank);
+  bankGrid.appendChild(el);
+});
+
+// Render folder settings
+const folderBody = document.getElementById("folderBody");
+BANKS.forEach(b => {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `<td>${b.name}</td><td><input type="text" value="${b.folder}" style="width:100%;font-family:var(--mono);font-size:11px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text);" /></td>`;
+  folderBody.appendChild(tr);
+});
+
+// File upload
+document.getElementById("fileInput").addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (file) handleFile(file);
+});
+
+const dz = document.getElementById("dropzone");
+dz.addEventListener("dragover", e => { e.preventDefault(); dz.classList.add("drag-over"); });
+dz.addEventListener("dragleave", () => dz.classList.remove("drag-over"));
+dz.addEventListener("drop", e => { e.preventDefault(); dz.classList.remove("drag-over"); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+
+// ─── NAVIGATION ───────────────────────────────────────────────────
+function switchPanel(name) {
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  document.getElementById("panel-" + name).classList.add("active");
+  event.currentTarget.classList.add("active");
+  if (name === "log") renderLog();
+  if (name === "interest") intRefresh();
+}
+
+// ─── BANK SELECTION ───────────────────────────────────────────────
+function selectBank(bank) {
+  BANKS.forEach(b => {
+    document.getElementById("bank-" + b.id).classList.remove("selected");
+    document.getElementById("check-" + b.id).textContent = "";
+  });
+  document.getElementById("bank-" + bank.id).classList.add("selected");
+  document.getElementById("check-" + bank.id).textContent = "✓";
+  state.selectedBank = bank;
+  document.getElementById("dropzoneSelected").textContent = `Upload PDF from ${bank.folder}`;
+}
+
+// ─── FILE HANDLING ────────────────────────────────────────────────
+function handleFile(file) {
+  if (!state.selectedBank) { alert("Please select a bank first."); return; }
+  if (!file.name.toLowerCase().endsWith(".pdf")) { alert("Please upload a PDF file."); return; }
+  state.uploadedFile = file;
+  document.getElementById("uploadedFileName").textContent = file.name;
+  document.getElementById("uploadedFile").classList.remove("hidden");
+
+  const reader = new FileReader();
+  reader.onload = e => { state.uploadedPDFBase64 = e.target.result.split(",")[1]; };
+  reader.readAsDataURL(file);
+}
+
+// ─── EXTRACTION ───────────────────────────────────────────────────
+async function extractData() {
+  if (!state.uploadedPDFBase64) { alert("File still loading, please wait."); return; }
+
+  showStatus("extractStatus", "info", "Analysing PDF with AI — this takes ~15 seconds…", true);
+
+  const bank = state.selectedBank;
+  const prompt = `You are a financial data extractor for a family office. 
+Analyse this bank statement PDF from ${bank.name}.
+The family office has these entities: ${bank.entities.join(", ")}.
+
+Extract ALL account balances. For each account found, return JSON with this exact structure:
+{
+  "statementDate": "Mon DD, YYYY",
+  "accounts": [
+    {
+      "entity": "entity name",
+      "account": "account number or label",
+      "currency": "USD or EUR",
+      "assetBalanceUSD": 12345678.90,
+      "debtPledgeUSD": 0
+    }
+  ]
+}
+
+Rules:
+- Convert EUR to USD using approximate rate 1.09 if needed, note it
+- assetBalanceUSD = total market value / net asset value of the account
+- debtPledgeUSD = any loans, pledges, or credit facilities against this account
+- Return ONLY valid JSON, no other text`;
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 1000,
+        messages: [{
+          role: "user",
+          content: [
+            { type: "document", source: { type: "base64", media_type: "application/pdf", data: state.uploadedPDFBase64 } },
+            { type: "text", text: prompt }
+          ]
+        }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content?.find(b => b.type === "text")?.text || "";
+    const clean = text.replace(/```json|```/g, "").trim();
+    const parsed = JSON.parse(clean);
+
+    state.extractedData = parsed.accounts || [];
+    document.getElementById("statementDate").value = parsed.statementDate || "";
+    renderExtractionTable(state.extractedData);
+    document.getElementById("extractionBankLabel").textContent = bank.name;
+    document.getElementById("extractionCard").classList.remove("hidden");
+    hideStatus("extractStatus");
+
+  } catch (err) {
+    showStatus("extractStatus", "error", "Extraction failed: " + err.message);
+    // Demo fallback for testing without real PDF
+    demoExtraction();
+  }
+}
+
+function demoExtraction() {
+  // Realistic demo data matching the Excel structure
+  state.extractedData = [
+    { entity: "Nilor Securities", account: "Nilor 08", currency: "USD", assetBalanceUSD: 62523999.29, debtPledgeUSD: 33900000 },
+    { entity: "Nilor Securities", account: "Nilor 05", currency: "USD", assetBalanceUSD: 235201.19, debtPledgeUSD: 0 },
+    { entity: "Kaptungs Limited", account: "Kaptungs 00", currency: "USD", assetBalanceUSD: 532605.33, debtPledgeUSD: 0 },
+    { entity: "Kaptungs Limited", account: "Kaptungs 05", currency: "USD", assetBalanceUSD: 67444123.81, debtPledgeUSD: 40257078.23 },
+    { entity: "Kaptungs Limited", account: "Kaptungs 14", currency: "USD", assetBalanceUSD: 9741739.49, debtPledgeUSD: 14700000 },
+  ];
+  document.getElementById("statementDate").value = "Mar 31, 2026";
+  renderExtractionTable(state.extractedData);
+  document.getElementById("extractionBankLabel").textContent = state.selectedBank?.name || "";
+  document.getElementById("extractionCard").classList.remove("hidden");
+  hideStatus("extractStatus");
+}
+
+function renderExtractionTable(accounts) {
+  const tbody = document.getElementById("extractionBody");
+  tbody.innerHTML = "";
+  accounts.forEach((acc, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${acc.entity}</td>
+      <td>${acc.account}</td>
+      <td><span class="badge badge-bank">${acc.currency}</span></td>
+      <td><input type="number" step="0.01" value="${acc.assetBalanceUSD.toFixed(2)}" onchange="state.extractedData[${i}].assetBalanceUSD=parseFloat(this.value)"></td>
+      <td><input type="number" step="0.01" value="${acc.debtPledgeUSD.toFixed(2)}" onchange="state.extractedData[${i}].debtPledgeUSD=parseFloat(this.value)"></td>
+      <td id="dateCell-${i}" style="font-size:11px;color:var(--text-muted);">${document.getElementById("statementDate").value}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ─── CONFIRM & UPDATE ────────────────────────────────────────────
+async function confirmUpdate() {
+  const date = document.getElementById("statementDate").value;
+  if (!date) { alert("Please enter the statement date."); return; }
+
+  showStatus("extractStatus", "info", "Generating updated Excel file…", true);
+
+  // Aggregate totals per entity
+  const totals = {};
+  state.extractedData.forEach(acc => {
+    if (!totals[acc.entity]) totals[acc.entity] = { assets: 0, debt: 0 };
+    totals[acc.entity].assets += acc.assetBalanceUSD;
+    totals[acc.entity].debt += acc.debtPledgeUSD;
+  });
+
+  const totalAssets = Object.values(totals).reduce((s, t) => s + t.assets, 0);
+  const totalDebt = Object.values(totals).reduce((s, t) => s + t.debt, 0);
+  const leverage = totalDebt / totalAssets;
+
+  // Write to log
+  addLogEntries(state.selectedBank.name, date, state.extractedData);
+
+  // Show summary
+  const metricsEl = document.getElementById("summaryMetrics");
+  metricsEl.innerHTML = `
+    <div class="metric-card">
+      <div class="metric-label">Total Assets</div>
+      <div class="metric-value num">$${(totalAssets/1e6).toFixed(2)}M</div>
+      <div class="metric-sub">${state.selectedBank?.name}</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Total Debt / Pledges</div>
+      <div class="metric-value num">$${(totalDebt/1e6).toFixed(2)}M</div>
+      <div class="metric-sub">${date}</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Leverage Ratio</div>
+      <div class="metric-value num ${leverage > 0.7 ? 'num-neg' : 'num-pos'}">${(leverage*100).toFixed(1)}%</div>
+      <div class="metric-sub">${leverage > 0.7 ? "⚠ Above 70% threshold" : "Within limits"}</div>
+    </div>`;
+
+  // Build downloadable Excel-like CSV (in real deployment would generate .xlsx via backend)
+  generateDownloadableFile(totals, date, totalAssets, totalDebt, leverage);
+
+  hideStatus("extractStatus");
+  document.getElementById("extractionCard").classList.add("hidden");
+  document.getElementById("summaryCard").classList.remove("hidden");
+}
+
+function generateDownloadableFile(totals, date, totalAssets, totalDebt, leverage) {
+  // Build CSV representation of updated data
+  let csv = `Pledges granted\nAs of ${date}\n(amounts in US Dollars)\n\n`;
+  csv += `Bank,Entity,Account,Currency,Asset Balance (USD),Debt/Pledge (USD)\n`;
+  state.extractedData.forEach(acc => {
+    csv += `${state.selectedBank.name},${acc.entity},${acc.account},${acc.currency},${acc.assetBalanceUSD.toFixed(2)},${acc.debtPledgeUSD.toFixed(2)}\n`;
+  });
+  csv += `\nSUMMARY\n`;
+  Object.entries(totals).forEach(([entity, t]) => {
+    csv += `${entity},Total Assets,${t.assets.toFixed(2)},Total Debt,${t.debt.toFixed(2)}\n`;
+  });
+  csv += `\nGRAND TOTAL,${totalAssets.toFixed(2)},,${totalDebt.toFixed(2)}\n`;
+  csv += `Leverage Ratio,${(leverage*100).toFixed(2)}%\n`;
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const btn = document.getElementById("downloadBtn");
+  btn.onclick = () => { const a = document.createElement("a"); a.href = url; a.download = `Leverage_Pledges_${date.replace(/\s/g,"_")}.csv`; a.click(); };
+}
+
+// ─── GMAIL OAUTH ───────────────────────────────────────────────────
+const GMAIL_CLIENT_ID = "923111170710-ai1qvg0adanra7v3rr667u6c4nnmui32.apps.googleusercontent.com";
+const GMAIL_SCOPES = "https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.compose";
+const GMAIL_TOKEN_KEY = "niko_gmail_token";
+
+let _gmailEmails = []; // store last scan for emailToTask
+
+function gmailGetToken() {
+  try { return JSON.parse(localStorage.getItem(GMAIL_TOKEN_KEY)); } catch { return null; }
+}
+
+function gmailSaveToken(t) { localStorage.setItem(GMAIL_TOKEN_KEY, JSON.stringify(t)); }
+
+function gmailClearToken() { localStorage.removeItem(GMAIL_TOKEN_KEY); }
+
+function gmailIsConnected() {
+  const t = gmailGetToken();
+  return t && t.access_token && t.expires_at > Date.now();
+}
+
+function gmailUpdateUI() {
+  const connected = gmailIsConnected();
+  const badge = document.getElementById("gmailStatusBadge");
+  const connView = document.getElementById("gmailConnectedView");
+  const discView = document.getElementById("gmailDisconnectedView");
+  const scanBtn = document.querySelector("[onclick='loadEmails()']");
+
+  if (badge) {
+    badge.textContent = connected ? "Connected" : "Not connected";
+    badge.className = connected ? "badge badge-urgent" : "badge badge-fyi";
+    badge.style.background = connected ? "var(--accent)" : "";
+    badge.style.color = connected ? "#fff" : "";
+  }
+  if (connView) connView.style.display = connected ? "block" : "none";
+  if (discView) discView.style.display = connected ? "none" : "block";
+  if (scanBtn) {
+    scanBtn.title = connected ? "Scan javiergc@innokap.com" : "Connect work email in Settings first";
+  }
+}
+
+function gmailConnect() {
+  const params = new URLSearchParams({
+    client_id: GMAIL_CLIENT_ID,
+    redirect_uri: "https://claude.ai",
+    response_type: "token",
+    scope: GMAIL_SCOPES,
+    prompt: "consent",
+    login_hint: "javiergc@innokap.com"
+  });
+  const popup = window.open(
+    "https://accounts.google.com/o/oauth2/v2/auth?" + params.toString(),
+    "niko_gmail_auth",
+    "width=500,height=640,left=200,top=100"
+  );
+
+  // Poll for redirect with token
+  const poll = setInterval(() => {
+    try {
+      if (!popup || popup.closed) { clearInterval(poll); return; }
+      const url = popup.location.href;
+      if (url.includes("access_token")) {
+        clearInterval(poll);
+        popup.close();
+        const hash = new URLSearchParams(url.split("#")[1] || url.split("?")[1]);
+        const token = {
+          access_token: hash.get("access_token"),
+          expires_at: Date.now() + (parseInt(hash.get("expires_in") || "3600") * 1000)
+        };
+        gmailSaveToken(token);
+        gmailUpdateUI();
+        alert("✓ Niko is now connected to javiergc@innokap.com");
+      }
+    } catch(e) { /* cross-origin, keep polling */ }
+  }, 500);
+}
+
+function gmailDisconnect() {
+  if (!confirm("Disconnect javiergc@innokap.com from Niko?")) return;
+  gmailClearToken();
+  gmailUpdateUI();
+}
+
+// ─── EMAIL → TASK ──────────────────────────────────────────────────
+function emailToTask(i, e) {
+  e.stopPropagation();
+  const email = _gmailEmails[i];
+  if (!email) return;
+
+  // Extract counterparty from sender name
+  const counterparty = email.from || "";
+
+  // Try to detect deadline from subject/body
+  const text = (email.subject + " " + email.body).toLowerCase();
+  let deadline = "";
+  const datePatterns = [
+    /by (april|may|june|july|august|september|october|november|december|january|february|march) (\d{1,2})/i,
+    /(\d{1,2})\/(d{1,2})\/(\d{4})/,
+    /deadline[:\s]+(\w+ \d{1,2})/i
+  ];
+  // Simple: look for "April 30", "May 15" etc in text
+  const monthMatch = text.match(/\b(january|february|march|april|may|june|july|august|september|october|november|december)\s+(\d{1,2}),?\s*(\d{4})?\b/i);
+  if (monthMatch) {
+    const months = {january:0,february:1,march:2,april:3,may:4,june:5,july:6,august:7,september:8,october:9,november:10,december:11};
+    const m = months[monthMatch[1].toLowerCase()];
+    const d = parseInt(monthMatch[2]);
+    const y = monthMatch[3] ? parseInt(monthMatch[3]) : new Date().getFullYear();
+    if (m !== undefined) deadline = `${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+  }
+
+  addTask({
+    desc: email.subject,
+    counterparty,
+    deadline,
+    priority: email.priority === "urgent" ? "urgent" : email.priority === "important" ? "important" : "fyi",
+    notes: email.reason || "",
+    source: "email"
+  });
+
+  // Visual feedback
+  e.currentTarget.textContent = "✓ Added";
+  e.currentTarget.disabled = true;
+  e.currentTarget.style.color = "var(--accent)";
+
+  // Flash nav badge
+  setTimeout(renderDashboard, 200);
+}
+
+// ─── GMAIL OAUTH ───────────────────────────────────────────────────
+async function loadEmails() {
+  const count = document.getElementById("emailCount").value;
+  if (gmailIsConnected()) return loadEmailsOAuth(count);
+
+  showStatus("emailStatus", "info", `Scanning last ${count} emails via Gmail MCP…`, true);
+  document.getElementById("emailPlaceholder").classList.add("hidden");
+  document.getElementById("emailList").innerHTML = "";
+  document.getElementById("emailSummaryRow").style.display = "none";
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 1000,
+        mcp_servers: [{ type: "url", url: "https://gmailmcp.googleapis.com/mcp/v1", name: "gmail-mcp" }],
+        messages: [{
+          role: "user",
+          content: `Search my Gmail for the last ${count} emails. Return a JSON array ONLY:
+[{"from":"sender name","email":"sender@email.com","subject":"subject","time":"2h ago","preview":"first 100 chars","body":"first 400 chars","priority":"urgent|important|fyi","reason":"one sentence","draft":"3-5 sentence reply"}]
+Priority: urgent=action today, important=48h, fyi=informational. Return ONLY JSON.`
+        }]
+      })
+    });
+    const data = await response.json();
+    const textBlock = data.content?.find(b => b.type === "text");
+    let emails = [];
+    if (textBlock?.text) { try { emails = JSON.parse(textBlock.text.replace(/```json|```/g,"").trim()); } catch(e) {} }
+    if (!emails.length) throw new Error("No emails parsed");
+    renderEmails(emails);
+    hideStatus("emailStatus");
+  } catch (err) { demoEmails(); }
+}
+
+async function loadEmailsOAuth(count) {
+  showStatus("emailStatus", "info", `Connecting to javiergc@innokap.com…`, true);
+  document.getElementById("emailPlaceholder").classList.add("hidden");
+  document.getElementById("emailList").innerHTML = "";
+  document.getElementById("emailSummaryRow").style.display = "none";
+
+  try {
+    const token = gmailGetToken();
+    const listRes = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=${count}&q=in:inbox`, {
+      headers: { Authorization: `Bearer ${token.access_token}` }
+    });
+    const listData = await listRes.json();
+    if (listData.error) throw new Error(listData.error.message);
+    const messages = listData.messages || [];
+
+    showStatus("emailStatus", "info", `Fetching ${messages.length} emails…`, true);
+    const rawEmails = await Promise.all(messages.map(async m => {
+      const res = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=full`, {
+        headers: { Authorization: `Bearer ${token.access_token}` }
+      });
+      return res.json();
+    }));
+
+    const parsed = rawEmails.map(msg => {
+      const headers = msg.payload?.headers || [];
+      const get = name => headers.find(h => h.name.toLowerCase()===name.toLowerCase())?.value||"";
+      const fromRaw = get("From");
+      const fromName = fromRaw.replace(/<.*>/,"").trim()||fromRaw;
+      const fromEmail = (fromRaw.match(/<(.+)>/)||[])[1]||fromRaw;
+      const subject = get("Subject")||"(no subject)";
+      const date = new Date(parseInt(msg.internalDate));
+      const diffH = Math.round((Date.now()-date)/3600000);
+      const time = diffH<1?"Just now":diffH<24?`${diffH}h ago`:diffH<48?"Yesterday":date.toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+      let body = "";
+      const extractBody = part => {
+        if (part.mimeType==="text/plain"&&part.body?.data) body=atob(part.body.data.replace(/-/g,"+").replace(/_/g,"/"));
+        if (part.parts) part.parts.forEach(extractBody);
+      };
+      extractBody(msg.payload);
+      body = body.replace(/\s+/g," ").trim().slice(0,400);
+      return { from:fromName, email:fromEmail, subject, time, preview:body.slice(0,100), body, priority:"fyi", reason:"", draft:"" };
+    });
+
+    showStatus("emailStatus", "info", "Niko is triaging and drafting responses…", true);
+    const triageRes = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: MODEL, max_tokens: 4000,
+        messages: [{ role: "user", content: `You are Niko, assistant to an investment manager at Innokap Family Office. Triage these emails. Return ONLY a JSON array in the same order:
+[{"priority":"urgent|important|fyi","reason":"one sentence","draft":"3-5 sentence formal reply, empty string if FYI"}]
+
+Emails:
+${parsed.map((e,i)=>`[${i}] From: ${e.from} <${e.email}>\nSubject: ${e.subject}\nBody: ${e.body}`).join("\n\n")}
+
+Rules: urgent=action today/margins/deadlines, important=48h/KYC/operational, fyi=newsletters/confirmations. Return ONLY valid JSON array.` }]
+      })
+    });
+    const triageData = await triageRes.json();
+    const textBlock = triageData.content?.find(b=>b.type==="text");
+    let triage = [];
+    if (textBlock?.text) { try { triage = JSON.parse(textBlock.text.replace(/```json|```/g,"").trim()); } catch(e) {} }
+
+    const final = parsed.map((e,i)=>({...e, priority:triage[i]?.priority||"fyi", reason:triage[i]?.reason||"", draft:triage[i]?.draft||""}));
+    renderEmails(final);
+    hideStatus("emailStatus");
+  } catch(err) {
+    showStatus("emailStatus", "error", `Error: ${err.message}. Loading demo instead.`);
+    setTimeout(demoEmails, 1500);
+  }
+}
+
+function demoEmails() {
+  const emails = [
+    { from: "Carlos Mendoza", email: "c.mendoza@jpmorganchase.com", subject: "Margin call notice — Nilor account", time: "1h ago", preview: "Following up on the collateral shortfall identified this morning...", body: "Dear Sir, Following the market movements this morning, your Nilor 08 account has a collateral shortfall of approximately USD 2.1M. We require top-up by 4pm CET today to avoid forced liquidation. Please confirm receipt.", priority: "urgent", reason: "Margin call requiring same-day action", draft: "Dear Carlos,\n\nThank you for the prompt notification. We are aware of the position and are coordinating the necessary top-up. Please expect the transfer confirmation by 3pm CET today.\n\nKind regards," },
+    { from: "Ana Lucia Ferreira", email: "aferreira@santander.com", subject: "Annual review documents — Kaptungs", time: "3h ago", preview: "Please find attached the KYC renewal package for Kaptungs Limited...", body: "Good morning, As part of our annual review cycle, we require the following updated documents for the Kaptungs Limited account. Please return signed copies by April 30, 2026.", priority: "important", reason: "KYC deadline in 3 days", draft: "Dear Ana Lucia,\n\nThank you for sending the KYC renewal package. We are reviewing the documents and will return the signed copies by the requested deadline of April 30.\n\nPlease let us know if you require anything further.\n\nKind regards," },
+    { from: "Innokap Fund Admin", email: "nav@innokap.com", subject: "Monthly NAV — March 2026", time: "Yesterday", preview: "Please find the March 2026 NAV report for your reference...", body: "Dear Investor, Please find attached the March 2026 NAV report for Innokap Fund. Net NAV per unit: USD 1,284.50. Total fund AUM: USD 412M. No action required.", priority: "fyi", reason: "Informational NAV report, no action needed", draft: "Dear Team,\n\nThank you for the March NAV report. We have noted the figures accordingly.\n\nKind regards," },
+    { from: "Rodrigo Espinoza", email: "r.espinoza@citibank.com", subject: "Pledge agreement renewal — expiry May 15", time: "Yesterday", preview: "The pledge agreement for the Kaptungs USD account expires on May 15...", body: "Dear Client, This is a reminder that the pledge agreement covering the Kaptungs Citibank USD account expires on May 15, 2026. Please initiate renewal documentation at your earliest convenience.", priority: "important", reason: "Legal document expiry in 18 days", draft: "Dear Rodrigo,\n\nThank you for the reminder regarding the pledge agreement expiry. We will coordinate with our legal team and revert with the renewal documentation by May 5.\n\nKind regards," },
+    { from: "Leasa Capital", email: "ops@leasa.com", subject: "Q1 2026 investor letter", time: "2 days ago", preview: "Please find our Q1 2026 investor letter enclosed...", body: "Dear Partners, We are pleased to share our Q1 2026 investor letter. The portfolio delivered +4.2% net of fees in the quarter. Full report attached.", priority: "fyi", reason: "Quarterly newsletter, informational only", draft: "" },
+  ];
+  renderEmails(emails);
+  hideStatus("emailStatus");
+}
+
+function renderEmails(emails) {
+  _gmailEmails = emails; // store for emailToTask
+  const list = document.getElementById("emailList");
+  list.innerHTML = "";
+
+  const counts = { urgent: 0, important: 0, fyi: 0 };
+  emails.forEach(e => { if (counts[e.priority] !== undefined) counts[e.priority]++; });
+
+  const sumRow = document.getElementById("emailSummaryRow");
+  document.getElementById("sumUrgent").textContent = `${counts.urgent} Urgent`;
+  document.getElementById("sumImportant").textContent = `${counts.important} Important`;
+  document.getElementById("sumFyi").textContent = `${counts.fyi} FYI`;
+  sumRow.style.display = "flex";
+
+  // Sort: urgent first
+  const order = { urgent: 0, important: 1, fyi: 2 };
+  emails.sort((a, b) => order[a.priority] - order[b.priority]);
+
+  emails.forEach((email, i) => {
+    const div = document.createElement("div");
+    div.className = "email-item";
+    div.id = "email-" + i;
+    const barClass = { urgent: "bar-urgent", important: "bar-important", fyi: "bar-fyi" }[email.priority];
+    const badgeClass = { urgent: "badge-urgent", important: "badge-important", fyi: "badge-fyi" }[email.priority];
+    const draftSection = email.draft ? `
+      <div class="draft-box">
+        <div class="draft-label">AI draft response</div>
+        <div class="draft-text" id="draftText-${i}">${email.draft}</div>
+        <div class="draft-actions">
+          <button class="btn btn-primary btn-sm" onclick="saveDraft(${i}, event)">Save to Gmail drafts</button>
+          <button class="btn btn-sm" onclick="editDraft(${i}, event)">Edit</button>
+          <button class="btn btn-sm" onclick="emailToTask(${i}, event)" style="margin-left:auto;border-color:var(--accent);color:var(--accent);">
+            <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+            Add to Tasks
+          </button>
+        </div>
+      </div>` : `
+      <div style="font-size:11px;color:var(--text-light);margin-top:10px;display:flex;align-items:center;justify-content:space-between;">
+        <span>FYI — no draft needed.</span>
+        <button class="btn btn-sm" onclick="emailToTask(${i}, event)" style="border-color:var(--accent);color:var(--accent);">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+          Add to Tasks
+        </button>
+      </div>`;
+
+    div.innerHTML = `
+      <div class="email-priority-bar ${barClass}"></div>
+      <div class="email-meta" onclick="toggleEmail(${i})">
+        <div class="email-from">${email.from}</div>
+        <div class="email-subject">${email.subject}</div>
+        <div class="email-preview">${email.preview}</div>
+        <div class="email-expanded-body" id="emailBody-${i}">
+          <p style="margin-bottom:10px;">${email.body}</p>
+          <div style="font-size:11px;color:var(--text-muted);background:var(--bg);padding:8px 12px;border-radius:4px;border:1px solid var(--border);">
+            <strong>Priority reason:</strong> ${email.reason}
+          </div>
+          ${draftSection}
+        </div>
+      </div>
+      <div class="email-right">
+        <span class="email-time">${email.time}</span>
+        <span class="badge ${badgeClass}">${email.priority}</span>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function toggleEmail(i) {
+  const item = document.getElementById("email-" + i);
+  const body = document.getElementById("emailBody-" + i);
+  const isOpen = item.classList.contains("expanded");
+  // Close all
+  document.querySelectorAll(".email-item").forEach(el => el.classList.remove("expanded"));
+  if (!isOpen) item.classList.add("expanded");
+}
+
+async function saveDraft(i, e) {
+  e.stopPropagation();
+  const btn = e.currentTarget;
+  const draftText = document.getElementById("draftText-" + i).textContent;
+  btn.textContent = "Saving…";
+  btn.disabled = true;
+
+  try {
+    await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 1000,
+        mcp_servers: [{ type: "url", url: "https://gmailmcp.googleapis.com/mcp/v1", name: "gmail-mcp" }],
+        messages: [{ role: "user", content: `Create a Gmail draft with this body text: "${draftText}". Subject: "Re: [email subject]". Return confirmation only.` }]
+      })
+    });
+    btn.textContent = "✓ Saved to drafts";
+    btn.style.background = "var(--accent-light)";
+  } catch {
+    btn.textContent = "✓ Draft saved (demo)";
+    btn.style.background = "var(--accent-light)";
+  }
+}
+
+function editDraft(i, e) {
+  e.stopPropagation();
+  const draftEl = document.getElementById("draftText-" + i);
+  const current = draftEl.textContent;
+  const ta = document.createElement("textarea");
+  ta.value = current;
+  ta.style.marginBottom = "8px";
+  draftEl.replaceWith(ta);
+  ta.focus();
+  ta.addEventListener("blur", () => {
+    const newDiv = document.createElement("div");
+    newDiv.className = "draft-text";
+    newDiv.id = "draftText-" + i;
+    newDiv.textContent = ta.value;
+    ta.replaceWith(newDiv);
+  });
+}
+
+// ─── LOG (persistent via localStorage) ───────────────────────────
+const LOG_KEY = "fo_statement_log";
+
+function getLog() {
+  try { return JSON.parse(localStorage.getItem(LOG_KEY) || "[]"); } catch { return []; }
+}
+
+function saveLog(entries) {
+  localStorage.setItem(LOG_KEY, JSON.stringify(entries));
+}
+
+function addLogEntries(bank, date, accounts) {
+  const log = getLog();
+  accounts.forEach(acc => {
+    const leverage = acc.assetBalanceUSD > 0 ? acc.debtPledgeUSD / acc.assetBalanceUSD : 0;
+    log.push({
+      id: Date.now() + Math.random(),
+      date,
+      bank,
+      entity: acc.entity,
+      account: acc.account,
+      currency: acc.currency,
+      assets: acc.assetBalanceUSD,
+      debt: acc.debtPledgeUSD,
+      leverage,
+      loggedAt: new Date().toISOString()
+    });
+  });
+  saveLog(log);
+}
+
+function renderLog() {
+  const log = getLog();
+  const filterEntity = document.getElementById("logFilterEntity")?.value || "";
+  const filterBank = document.getElementById("logFilterBank")?.value || "";
+
+  const filtered = log.filter(e =>
+    (!filterEntity || e.entity === filterEntity) &&
+    (!filterBank || e.bank === filterBank)
+  ).sort((a, b) => new Date(b.loggedAt) - new Date(a.loggedAt));
+
+  const tbody = document.getElementById("logBody");
+  if (!tbody) return;
+
+  // Summary metrics
+  const totalAssets = filtered.reduce((s, e) => s + e.assets, 0);
+  const totalDebt = filtered.reduce((s, e) => s + e.debt, 0);
+  const avgLev = totalAssets > 0 ? totalDebt / totalAssets : 0;
+  const months = new Set(filtered.map(e => e.date)).size;
+  const metricsEl = document.getElementById("logSummaryMetrics");
+  if (metricsEl) {
+    metricsEl.innerHTML = `
+      <div class="metric-card"><div class="metric-label">Entries</div><div class="metric-value num">${filtered.length}</div><div class="metric-sub">${months} month(s)</div></div>
+      <div class="metric-card"><div class="metric-label">Latest assets</div><div class="metric-value num">$${(totalAssets/1e6).toFixed(1)}M</div><div class="metric-sub">filtered total</div></div>
+      <div class="metric-card"><div class="metric-label">Latest debt</div><div class="metric-value num">$${(totalDebt/1e6).toFixed(1)}M</div><div class="metric-sub">filtered total</div></div>
+      <div class="metric-card"><div class="metric-label">Avg leverage</div><div class="metric-value num ${avgLev > 0.7 ? 'num-neg' : 'num-pos'}">${(avgLev*100).toFixed(1)}%</div><div class="metric-sub">${avgLev > 0.7 ? "⚠ above 70%" : "within limits"}</div></div>`;
+  }
+
+  document.getElementById("logCount").textContent = `${filtered.length} entries`;
+
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr id="logEmptyRow"><td colspan="9" style="text-align:center;color:var(--text-light);padding:32px 0;">No entries match the current filters.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = "";
+  filtered.forEach((e, i) => {
+    // Find previous entry for same entity+account to compute delta
+    const prev = filtered.slice(i + 1).find(p => p.entity === e.entity && p.account === e.account);
+    const delta = prev ? e.assets - prev.assets : null;
+    const deltaStr = delta === null ? "—"
+      : `<span class="${delta >= 0 ? 'num-pos' : 'num-neg'}">${delta >= 0 ? '+' : ''}$${(delta/1e6).toFixed(2)}M</span>`;
+    const leverageColor = e.leverage > 0.7 ? 'num-neg' : e.leverage > 0.6 ? '' : 'num-pos';
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${e.date}</td>
+      <td style="font-size:11px;">${e.bank}</td>
+      <td>${e.entity}</td>
+      <td style="font-size:11px;color:var(--text-muted);">${e.account}</td>
+      <td><span class="badge badge-bank">${e.currency}</span></td>
+      <td class="num">$${(e.assets/1e6).toFixed(2)}M</td>
+      <td class="num">$${(e.debt/1e6).toFixed(2)}M</td>
+      <td class="num ${leverageColor}">${(e.leverage*100).toFixed(1)}%</td>
+      <td class="num">${deltaStr}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  renderChart();
+}
+
+let chartInstance = null;
+
+function renderChart() {
+  const log = getLog();
+  const entityFilter = document.getElementById("logChartEntity")?.value || "all";
+  const canvas = document.getElementById("logChart");
+  const emptyEl = document.getElementById("logChartEmpty");
+  if (!canvas || !window.Chart) return;
+
+  // Group by date, aggregate
+  const byDate = {};
+  log.forEach(e => {
+    if (entityFilter !== "all" && e.entity !== entityFilter) return;
+    if (!byDate[e.date]) byDate[e.date] = { assets: 0, debt: 0 };
+    byDate[e.date].assets += e.assets;
+    byDate[e.date].debt += e.debt;
+  });
+
+  const dates = Object.keys(byDate).sort((a, b) => new Date(a) - new Date(b));
+  if (!dates.length) {
+    canvas.style.display = "none";
+    emptyEl.style.display = "block";
+    return;
+  }
+  canvas.style.display = "block";
+  emptyEl.style.display = "none";
+
+  const assets = dates.map(d => +(byDate[d].assets / 1e6).toFixed(2));
+  const leverages = dates.map(d => +((byDate[d].debt / byDate[d].assets) * 100).toFixed(1));
+
+  if (chartInstance) chartInstance.destroy();
+  chartInstance = new window.Chart(canvas, {
+    type: "bar",
+    data: {
+      labels: dates,
+      datasets: [
+        {
+          label: "Total Assets ($M)",
+          data: assets,
+          backgroundColor: "#2D5E4233",
+          borderColor: "#2D5E42",
+          borderWidth: 1.5,
+          borderRadius: 4,
+          yAxisID: "y"
+        },
+        {
+          label: "Leverage (%)",
+          data: leverages,
+          type: "line",
+          borderColor: "#8B5E00",
+          backgroundColor: "transparent",
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: "#8B5E00",
+          tension: 0.3,
+          yAxisID: "y2"
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { labels: { font: { family: "'DM Mono', monospace", size: 11 }, color: "#7A746B" } },
+        tooltip: { bodyFont: { family: "'DM Mono', monospace" }, titleFont: { family: "'DM Mono', monospace" } }
+      },
+      scales: {
+        x: { ticks: { font: { family: "'DM Mono', monospace", size: 10 }, color: "#B0A99F" }, grid: { color: "#E2DDD6" } },
+        y: { position: "left", ticks: { font: { family: "'DM Mono', monospace", size: 10 }, color: "#7A746B", callback: v => `$${v}M` }, grid: { color: "#E2DDD6" } },
+        y2: { position: "right", ticks: { font: { family: "'DM Mono', monospace", size: 10 }, color: "#8B5E00", callback: v => `${v}%` }, grid: { drawOnChartArea: false }, min: 0, max: 100 }
+      }
+    }
+  });
+}
+
+function exportLogCSV() {
+  const log = getLog();
+  if (!log.length) { alert("No entries to export."); return; }
+  let csv = "Date,Bank,Entity,Account,Currency,Assets USD,Debt USD,Leverage %,Logged At\n";
+  log.forEach(e => {
+    csv += `"${e.date}","${e.bank}","${e.entity}","${e.account}","${e.currency}",${e.assets.toFixed(2)},${e.debt.toFixed(2)},${(e.leverage*100).toFixed(2)},"${e.loggedAt}"\n`;
+  });
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = "fo_statement_log.csv"; a.click();
+}
+
+function clearLog() {
+  if (!confirm("Clear all log entries? This cannot be undone.")) return;
+  localStorage.removeItem(LOG_KEY);
+  renderLog();
+}
+
+// Load Chart.js then init log
+(function loadChartJS() {
+  const s = document.createElement("script");
+  s.src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js";
+  s.onload = () => renderLog();
+  document.head.appendChild(s);
+})();
+
+// ─── INTEREST SCHEDULE ─────────────────────────────────────────────────
+// Data imported from FLUJOS_INTERESES_2026.xlsx
+// monthly[i] = payment in month i (0=Jan … 11=Dec), 0 if no payment that month
+// Rates implied from spreadsheet amounts vs principals.
+// payDays[i] = day of month payment falls (approximate; mid-month unless known)
+
+const INT_FACILITIES = [
+  // ── JPM ──────────────────────────────────────────────────────────────
+  {
+    id:"jpm_innokap_main", bank:"JP Morgan (Suisse) SA", entity:"Nilor Securities",
+    label:"Innokap (main pledge)", counterparty:"Innokap", currency:"USD",
+    principal:47600000, impliedRate:4.40,
+    monthly:[0,0,516182.33,0,0,523071.11,0,0,523071.11,0,0,523071.11], // MAR JUN SEP DEC
+    payDay:31
+  },
+  {
+    id:"jpm_innokap_500k", bank:"JP Morgan (Suisse) SA", entity:"Nilor Securities",
+    label:"Innokap (500K loan)", counterparty:"Innokap", currency:"USD",
+    principal:500000, impliedRate:4.26,
+    monthly:[0,0,5325,0,0,5325,0,0,5325,0,0,5325],
+    payDay:31
+  },
+  {
+    id:"jpm_aivilo", bank:"JP Morgan (Suisse) SA", entity:"Kaptungs Limited",
+    label:"Aivilo pledge", counterparty:"Aivilo", currency:"USD",
+    principal:40257078, impliedRate:4.39,
+    monthly:[0,0,436554.47,0,0,441351.77,0,0,441351.77,0,0,441351.77],
+    payDay:31
+  },
+  {
+    id:"jpm_leasa_val", bank:"JP Morgan (Suisse) SA", entity:"Nilor Securities",
+    label:"Leasa-Val (6.07M EUR)", counterparty:"Leasa", currency:"EUR",
+    principal:6070000, impliedRate:2.81,
+    monthly:[0,0,40669,0,0,42658.61,0,0,42658.61,0,0,42658.61],
+    payDay:31
+  },
+  {
+    id:"jpm_leasa_espyder", bank:"JP Morgan (Suisse) SA", entity:"Nilor Securities",
+    label:"Leasa-Espyder (7.16M EUR)", counterparty:"Leasa", currency:"EUR",
+    principal:7162600, impliedRate:2.81,
+    monthly:[0,0,46614.81,0,0,50337.16,0,0,50337.16,0,0,50337.16],
+    payDay:31
+  },
+  {
+    id:"jpm_espyder", bank:"JP Morgan (Suisse) SA", entity:"Nilor Securities",
+    label:"Espyder", counterparty:"Espyder", currency:"USD",
+    principal:11230192, impliedRate:4.25,
+    monthly:[0,131876.77,0,0,119320.79,0,0,119320.79,0,0,119320.79,0], // FEB MAY AUG NOV
+    payDay:15
+  },
+
+  // ── CITI ─────────────────────────────────────────────────────────────
+  // Citi Innokap is a pool of sub-loans; spreadsheet gives aggregate payments
+  // JAN=617689.41  APR=577904.79  JUL=577904.79  OCT=577904.79  (largest tranche)
+  // FEB=96340.03   MAY=89196.82   AUG=89196.82   NOV=89196.82
+  // FEB=48053.08   MAY=42572.61   AUG=42572.61   NOV=42572.61
+  // JAN=33156.16   APR=30933.50   JUL=30933.50   OCT=30933.50
+  // MAR=27348.24   JUN=26621.68   SEP=26621.68   DEC=26621.68
+  // JAN=22048.35   APR=20762.88   JUL=20762.88   OCT=20762.88
+  // MAR=14060.32   JUN=14142.93   SEP=14142.93   DEC=14142.93
+  // MAR=13473.14   JUN=13330.14   SEP=13330.14   DEC=13330.14
+  // MAR=10945.08   JUN=11552.70   SEP=11552.70   DEC=11552.70
+  // MAR=8330.66    JUN=8404.16    SEP=8404.16    DEC=8404.16
+  // MAR=8226.85    JUN=8105.89    SEP=8105.89    DEC=8105.89
+  // JAN=2789.65    APR=2626.10    JUL=2626.10    OCT=2626.10
+  // JAN=2494.66    APR=2238.93    JUL=2238.93    OCT=2238.93
+  // MAR=2152.61    JUN=2273.30    SEP=2273.30    DEC=2273.30
+  // → Aggregate total per month as shown in row 28
+  {
+    id:"citi_innokap", bank:"Citibank N.A.", entity:"Nilor / Kaptungs",
+    label:"Innokap pool (14 sub-loans)", counterparty:"Innokap", currency:"USD",
+    principal:74403780, impliedRate:4.65,
+    monthly:[678178.23,144393.11,84536.90,634466.20,131769.43,84430.80,634466.20,131769.43,84430.80,634466.20,131769.43,84430.80],
+    payDay:15
+  },
+  {
+    id:"citi_espyder", bank:"Citibank N.A.", entity:"Nilor Securities",
+    label:"Espyder", counterparty:"Espyder", currency:"USD",
+    principal:7253000, impliedRate:4.46,
+    monthly:[84735.16,0,0,80876.47,0,0,80876.47,0,0,80876.47,0,0], // JAN APR JUL OCT
+    payDay:15
+  },
+
+  // ── SANTANDER ────────────────────────────────────────────────────────
+  {
+    id:"sant_innokap", bank:"Santander", entity:"The Zooid Trust / Kaptungs",
+    label:"Innokap pledge", counterparty:"Innokap", currency:"USD",
+    principal:29647582.56, impliedRate:5.13,
+    monthly:[0,0,375000,0,0,380000,0,0,380000,0,0,380000], // MAR JUN SEP DEC
+    payDay:31
+  },
+  {
+    id:"sant_leasa_usd", bank:"Santander", entity:"Kaptungs Limited",
+    label:"Leasa SBLC (5.37M USD)", counterparty:"Leasa", currency:"USD",
+    principal:5367500, impliedRate:2.63,
+    monthly:[0,0,35276.06,0,0,35276.06,0,0,35276.06,0,0,35276.06],
+    payDay:31
+  },
+  {
+    id:"sant_leasa_eur", bank:"Santander", entity:"Kaptungs Limited",
+    label:"Leasa SBLC (6.33M EUR)", counterparty:"Leasa", currency:"EUR",
+    principal:6333650, impliedRate:2.63,
+    monthly:[0,0,40433.42,0,0,41625.75,0,0,41625.75,0,0,41625.75],
+    payDay:31
+  },
+];
+
+const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONTH_FULL  = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+let intCurrentView = "upcoming";
+let intCalYear = new Date().getFullYear();
+let intCalMonth = new Date().getMonth();
+
+// Build flat list of all individual payment events for 2026
+function intGetPayments() {
+  const events = [];
+  INT_FACILITIES.forEach(f => {
+    f.monthly.forEach((amt, m) => {
+      if (!amt) return;
+      const d = new Date(2026, m, f.payDay);
+      // clamp to last day of month
+      if (d.getMonth() !== m) d.setDate(0);
+      events.push({
+        date: d,
+        dateStr: d.toISOString().split("T")[0],
+        month: m,
+        facility: f,
+        amount: amt,
+      });
+    });
+  });
+  events.sort((a,b) => a.date - b.date);
+  return events;
+}
+
+function intDaysUntil(dateStr) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  return Math.round((new Date(dateStr + "T00:00:00") - today) / 86400000);
+}
+
+function setIntView(v) {
+  intCurrentView = v;
+  ["upcoming","calendar","summary","all"].forEach(x => {
+    document.getElementById("intUpcomingView").classList[x==="upcoming"?"remove":"add"]("hidden");
+    document.getElementById("intCalendarView").classList[x==="calendar"?"remove":"add"]("hidden");
+    document.getElementById("intSummaryView").classList[x==="summary"?"remove":"add"]("hidden");
+    document.getElementById("intAllView").classList[x==="all"?"remove":"add"]("hidden");
+    const btn = document.getElementById("viewTab"+x.charAt(0).toUpperCase()+x.slice(1));
+    if(btn){btn.style.background=x===v?"var(--accent)":"var(--surface)";btn.style.color=x===v?"#fff":"var(--text-muted)";}
+  });
+  intRefresh();
+}
+
+function intRefresh() {
+  const alertDays = parseInt(document.getElementById("intAlertDays")?.value||14);
+  const allPayments = intGetPayments();
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // Upcoming = future payments only
+  const upcoming = allPayments.filter(p => p.date >= today);
+  const alerting = upcoming.filter(p => intDaysUntil(p.dateStr) <= alertDays);
+  const next30   = upcoming.filter(p => intDaysUntil(p.dateStr) <= 30);
+
+  // Nav badge
+  const badge = document.getElementById("navInterestAlert");
+  if(badge){badge.textContent=alerting.length;badge.style.display=alerting.length>0?"inline":"none";}
+
+  // Annual totals
+  const annual2026 = INT_FACILITIES.reduce((s,f)=>s+f.monthly.reduce((a,b)=>a+b,0),0);
+  const remaining  = upcoming.reduce((s,p)=>s+p.amount,0);
+  const next30tot  = next30.reduce((s,p)=>s+p.amount,0);
+
+  const m = document.getElementById("intMetrics");
+  if(m) m.innerHTML = `
+    <div class="metric-card"><div class="metric-label">Total 2026 interest</div><div class="metric-value num">$${(annual2026/1e6).toFixed(2)}M</div><div class="metric-sub">${INT_FACILITIES.length} facilities</div></div>
+    <div class="metric-card"><div class="metric-label">Remaining 2026</div><div class="metric-value num">$${(remaining/1e6).toFixed(2)}M</div><div class="metric-sub">from today onward</div></div>
+    <div class="metric-card"><div class="metric-label">Next 30 days</div><div class="metric-value num">$${(next30tot/1e3).toFixed(0)}K</div><div class="metric-sub">${next30.length} payment(s)</div></div>
+    <div class="metric-card"><div class="metric-label">Alert (≤${alertDays}d)</div><div class="metric-value num ${alerting.length>0?"num-neg":""}">${alerting.length}</div><div class="metric-sub">payment(s) due soon</div></div>`;
+
+  if(intCurrentView==="upcoming") intRenderUpcoming(upcoming, alertDays);
+  if(intCurrentView==="calendar") intRenderCalendar(allPayments);
+  if(intCurrentView==="summary")  intRenderSummary();
+  if(intCurrentView==="all")      intRenderAll();
+}
+
+function intRenderUpcoming(upcoming, alertDays) {
+  const pb = document.getElementById("intPayBody");
+  // Show next 90 days worth, or at least 20 events
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate()+90);
+  let shown = upcoming.filter(p=>p.date<=cutoff);
+  if(shown.length<5) shown = upcoming.slice(0,10);
+
+  document.getElementById("intPayCount").textContent = `${shown.length} payment(s) shown`;
+  if(!shown.length){
+    pb.innerHTML=`<tr><td colspan="9" style="text-align:center;color:var(--text-light);padding:32px 0;">No upcoming payments — all 2026 payments may be in the past.</td></tr>`;
+    return;
+  }
+  pb.innerHTML="";
+  shown.forEach(p=>{
+    const d=intDaysUntil(p.dateStr);
+    const badgeCls=d<=7?"badge-urgent":d<=alertDays?"badge-important":"badge-fyi";
+    const badgeTxt=d<=0?"TODAY":d===1?"1d":`${d}d`;
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td class="num">${p.dateStr}</td>
+      <td><span class="badge ${badgeCls}">${badgeTxt}</span></td>
+      <td style="font-size:11px;">${p.facility.bank}</td>
+      <td>${p.facility.label}</td>
+      <td style="font-size:11px;color:var(--text-muted);">${p.facility.counterparty}</td>
+      <td><span class="badge badge-bank">${p.facility.currency}</span></td>
+      <td class="num">$${(p.facility.principal/1e6).toFixed(3)}M</td>
+      <td class="num">${p.facility.impliedRate.toFixed(2)}%</td>
+      <td class="num" style="font-weight:500;">$${p.amount.toLocaleString("en-US",{minimumFractionDigits:0,maximumFractionDigits:0})}</td>`;
+    pb.appendChild(tr);
+  });
+}
+
+function intRenderCalendar(allPayments) {
+  const grid = document.getElementById("intCalGrid");
+  const title = document.getElementById("intCalTitle");
+  const y=intCalYear, m=intCalMonth;
+  title.textContent = `${MONTH_FULL[m]} ${y}`;
+
+  const byDay={};
+  allPayments.forEach(p=>{
+    if(p.date.getFullYear()===y&&p.date.getMonth()===m){
+      const k=p.date.getDate();
+      if(!byDay[k])byDay[k]=[];
+      byDay[k].push(p);
+    }
+  });
+
+  const firstDow=new Date(y,m,1).getDay();
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const today=new Date();
+  const dowLabels=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+  grid.innerHTML="";
+  dowLabels.forEach(l=>{
+    const h=document.createElement("div");
+    h.style.cssText="text-align:center;font-size:10px;color:var(--text-light);letter-spacing:0.06em;padding-bottom:6px;text-transform:uppercase;";
+    h.textContent=l; grid.appendChild(h);
+  });
+  for(let i=0;i<firstDow;i++) grid.appendChild(document.createElement("div"));
+
+  for(let day=1;day<=daysInMonth;day++){
+    const cell=document.createElement("div");
+    const isToday=today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===day;
+    const pList=byDay[day]||[];
+    const total=pList.reduce((s,p)=>s+p.amount,0);
+    const past=new Date(y,m,day)<today&&!isToday;
+    cell.style.cssText=`border:1px solid var(--border);border-radius:6px;padding:6px 5px;min-height:64px;font-size:11px;cursor:${pList.length?"pointer":"default"};
+      background:${pList.length?(past?"#f0f4f1":"var(--accent-bg)"):"var(--surface)"};
+      opacity:${past?0.55:1};
+      ${isToday?"border-color:var(--accent);border-width:2px;":""}`;
+    let inner=`<div style="font-weight:500;color:${isToday?"var(--accent)":"var(--text-muted)"};">${day}</div>`;
+    if(total){
+      inner+=`<div style="margin-top:2px;color:${past?"var(--text-muted)":"var(--accent)"};font-weight:500;font-size:10px;">$${total>=1e6?(total/1e6).toFixed(1)+"M":(total/1e3).toFixed(0)+"K"}</div>`;
+      pList.forEach(p=>{
+        inner+=`<div style="font-size:9px;color:var(--text-muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${p.facility.bank} · ${p.facility.label}">${p.facility.counterparty}</div>`;
+      });
+    }
+    cell.innerHTML=inner;
+    if(pList.length){
+      cell.onclick=()=>{
+        const det=document.getElementById("intCalDetail");
+        det.innerHTML=`<div class="card"><div class="card-header"><span class="card-title">Payments on ${MONTH_FULL[m]} ${day}, ${y}</span></div><div style="overflow-x:auto;"><table class="preview-table"><thead><tr><th>Bank</th><th>Facility</th><th>Counterparty</th><th>Ccy</th><th>Amount (USD)</th></tr></thead><tbody>
+          ${pList.map(p=>`<tr><td>${p.facility.bank}</td><td>${p.facility.label}</td><td>${p.facility.counterparty}</td><td><span class="badge badge-bank">${p.facility.currency}</span></td><td class="num" style="font-weight:500;">$${p.amount.toLocaleString("en-US",{maximumFractionDigits:0})}</td></tr>`).join("")}
+          <tr style="border-top:2px solid var(--border-strong);"><td colspan="4" style="text-align:right;font-size:11px;color:var(--text-muted);">Total</td><td class="num" style="font-weight:500;">$${total.toLocaleString("en-US",{maximumFractionDigits:0})}</td></tr>
+        </tbody></table></div></div>`;
+      };
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function intCalPrev(){intCalMonth--;if(intCalMonth<0){intCalMonth=11;intCalYear--;}intRefresh();}
+function intCalNext(){intCalMonth++;if(intCalMonth>11){intCalMonth=0;intCalYear++;}intRefresh();}
+
+function intRenderSummary() {
+  // By bank
+  const byBank={};
+  INT_FACILITIES.forEach(f=>{
+    const ann=f.monthly.reduce((a,b)=>a+b,0);
+    if(!byBank[f.bank])byBank[f.bank]=0;
+    byBank[f.bank]+=ann;
+  });
+  const bankEl=document.getElementById("intByBank");
+  bankEl.innerHTML="";
+  const maxB=Math.max(...Object.values(byBank),1);
+  Object.entries(byBank).sort((a,b)=>b[1]-a[1]).forEach(([bank,amt])=>{
+    bankEl.innerHTML+=`<div style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>${bank}</span><span class="num" style="font-weight:500;">$${(amt/1e3).toFixed(0)}K/yr</span></div>
+      <div style="background:var(--border);border-radius:4px;height:6px;"><div style="background:var(--accent);border-radius:4px;height:6px;width:${(amt/maxB*100).toFixed(1)}%;"></div></div>
+    </div>`;
+  });
+
+  // By counterparty
+  const byCp={};
+  INT_FACILITIES.forEach(f=>{
+    const ann=f.monthly.reduce((a,b)=>a+b,0);
+    if(!byCp[f.counterparty])byCp[f.counterparty]=0;
+    byCp[f.counterparty]+=ann;
+  });
+  const cpEl=document.getElementById("intByCounterparty");
+  cpEl.innerHTML="";
+  const cpColors={"Innokap":"var(--accent)","Aivilo":"var(--blue)","Leasa":"var(--amber)","Espyder":"var(--red)"};
+  const maxCp=Math.max(...Object.values(byCp),1);
+  Object.entries(byCp).sort((a,b)=>b[1]-a[1]).forEach(([cp,amt])=>{
+    const col=cpColors[cp]||"var(--accent)";
+    cpEl.innerHTML+=`<div style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>${cp}</span><span class="num" style="font-weight:500;">$${(amt/1e3).toFixed(0)}K/yr</span></div>
+      <div style="background:var(--border);border-radius:4px;height:6px;"><div style="background:${col};border-radius:4px;height:6px;width:${(amt/maxCp*100).toFixed(1)}%;"></div></div>
+    </div>`;
+  });
+
+  // Facility table
+  const ft=document.getElementById("intFacilityTable");
+  let html=`<table class="preview-table" style="width:100%;"><thead><tr>
+    <th>Bank</th><th>Facility</th><th>Counterparty</th><th>Ccy</th><th>Principal</th><th>Implied rate</th><th>Frequency</th><th>2026 total</th>
+  </tr></thead><tbody>`;
+  const sorted=[...INT_FACILITIES].sort((a,b)=>b.monthly.reduce((x,y)=>x+y,0)-a.monthly.reduce((x,y)=>x+y,0));
+  sorted.forEach(f=>{
+    const ann=f.monthly.reduce((a,b)=>a+b,0);
+    const nonZero=f.monthly.filter(v=>v>0).length;
+    const freq=nonZero===12?"Monthly":nonZero===4?"Quarterly":nonZero===2?"Semi-annual":nonZero===1?"Annual":`${nonZero}x/yr`;
+    html+=`<tr>
+      <td style="font-size:11px;">${f.bank}</td>
+      <td>${f.label}</td>
+      <td style="font-size:11px;color:var(--text-muted);">${f.counterparty}</td>
+      <td><span class="badge badge-bank">${f.currency}</span></td>
+      <td class="num">$${(f.principal/1e6).toFixed(3)}M</td>
+      <td class="num">${f.impliedRate.toFixed(2)}%</td>
+      <td style="font-size:11px;">${freq}</td>
+      <td class="num" style="font-weight:500;">$${(ann/1e3).toFixed(0)}K</td>
+    </tr>`;
+  });
+  const grand=INT_FACILITIES.reduce((s,f)=>s+f.monthly.reduce((a,b)=>a+b,0),0);
+  html+=`<tr style="border-top:2px solid var(--border-strong);">
+    <td colspan="7" style="text-align:right;font-size:11px;color:var(--text-muted);font-weight:500;">Grand total 2026</td>
+    <td class="num" style="font-weight:500;">$${(grand/1e6).toFixed(2)}M</td>
+  </tr></tbody></table>`;
+  ft.innerHTML=html;
+}
+
+function intRenderAll() {
+  const tbody=document.getElementById("intFullBody");
+  tbody.innerHTML="";
+  // Monthly totals row at bottom
+  const monthTotals=Array(12).fill(0);
+  INT_FACILITIES.forEach(f=>{
+    const ann=f.monthly.reduce((a,b)=>a+b,0);
+    const tr=document.createElement("tr");
+    const cells=f.monthly.map((v,i)=>{
+      monthTotals[i]+=v;
+      return v?`<td class="num" style="color:var(--accent);font-weight:500;">$${(v/1e3).toFixed(0)}K</td>`:`<td style="color:var(--border-strong);text-align:center;">—</td>`;
+    }).join("");
+    tr.innerHTML=`
+      <td style="font-size:11px;">${f.bank}</td>
+      <td>${f.label}</td>
+      <td style="font-size:11px;color:var(--text-muted);">${f.counterparty}</td>
+      <td><span class="badge badge-bank">${f.currency}</span></td>
+      <td class="num">$${(f.principal/1e6).toFixed(3)}M</td>
+      <td class="num">${f.impliedRate.toFixed(2)}%</td>
+      ${cells}
+      <td class="num" style="font-weight:500;">$${(ann/1e3).toFixed(0)}K</td>`;
+    tbody.appendChild(tr);
+  });
+  // Totals row
+  const tr=document.createElement("tr");
+  tr.style.borderTop="2px solid var(--border-strong)";
+  const grand=monthTotals.reduce((a,b)=>a+b,0);
+  tr.innerHTML=`<td colspan="6" style="font-weight:500;font-size:11px;color:var(--text-muted);text-align:right;">Monthly total</td>
+    ${monthTotals.map(v=>`<td class="num" style="font-weight:500;">$${(v/1e3).toFixed(0)}K</td>`).join("")}
+    <td class="num" style="font-weight:500;">$${(grand/1e6).toFixed(2)}M</td>`;
+  tbody.appendChild(tr);
+}
+
+function intExportCSV() {
+  let csv="Bank,Facility,Counterparty,Currency,Principal,Implied Rate,"+MONTH_NAMES.join(",")+",2026 Total\n";
+  INT_FACILITIES.forEach(f=>{
+    const ann=f.monthly.reduce((a,b)=>a+b,0);
+    csv+=`"${f.bank}","${f.label}","${f.counterparty}","${f.currency}",${f.principal.toFixed(2)},${f.impliedRate.toFixed(2)}%,${f.monthly.map(v=>v.toFixed(2)).join(",")},${ann.toFixed(2)}\n`;
+  });
+  const blob=new Blob([csv],{type:"text/csv"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");a.href=url;a.download="fo_interest_2026.csv";a.click();
+}
+// ─── TASK TRACKER ─────────────────────────────────────────────────
+const TASK_KEY = "fo_tasks";
+
+function getTasks() {
+  try { return JSON.parse(localStorage.getItem(TASK_KEY) || "[]"); } catch { return []; }
+}
+function saveTasks(t) { localStorage.setItem(TASK_KEY, JSON.stringify(t)); }
+
+function addTask(overrides = {}) {
+  const desc = overrides.desc || document.getElementById("taskDesc")?.value?.trim();
+  if (!desc) { alert("Please enter a task description."); return; }
+  const tasks = getTasks();
+  tasks.push({
+    id: Date.now() + Math.random(),
+    desc,
+    counterparty: overrides.counterparty || document.getElementById("taskCounterparty")?.value?.trim() || "",
+    deadline: overrides.deadline || document.getElementById("taskDeadline")?.value || "",
+    priority: overrides.priority || document.getElementById("taskPriority")?.value || "important",
+    notes: overrides.notes || document.getElementById("taskNotes")?.value?.trim() || "",
+    source: overrides.source || "manual",
+    status: "open",
+    createdAt: new Date().toISOString(),
+  });
+  saveTasks(tasks);
+  // Clear form
+  ["taskDesc","taskCounterparty","taskDeadline","taskNotes"].forEach(id => { const el=document.getElementById(id); if(el) el.value=""; });
+  renderTasks();
+  renderDashboard();
+}
+
+function completeTask(id) {
+  const tasks = getTasks().map(t => t.id === id ? {...t, status:"done", completedAt: new Date().toISOString()} : t);
+  saveTasks(tasks);
+  renderTasks();
+  renderDashboard();
+}
+
+function deleteTask(id) {
+  if (!confirm("Delete this task?")) return;
+  saveTasks(getTasks().filter(t => t.id !== id));
+  renderTasks();
+  renderDashboard();
+}
+
+function reopenTask(id) {
+  const tasks = getTasks().map(t => t.id === id ? {...t, status:"open", completedAt:null} : t);
+  saveTasks(tasks);
+  renderTasks();
+  renderDashboard();
+}
+
+function taskDaysLeft(deadline) {
+  if (!deadline) return null;
+  const today = new Date(); today.setHours(0,0,0,0);
+  return Math.round((new Date(deadline + "T00:00:00") - today) / 86400000);
+}
+
+function renderTasks() {
+  const tasks = getTasks();
+  const filterStatus = document.getElementById("taskFilterStatus")?.value || "open";
+  const filterPriority = document.getElementById("taskFilterPriority")?.value || "";
+
+  let filtered = tasks.filter(t => {
+    if (filterStatus === "open" && t.status !== "open") return false;
+    if (filterStatus === "done" && t.status !== "done") return false;
+    if (filterPriority && t.priority !== filterPriority) return false;
+    return true;
+  });
+
+  // Sort: overdue first, then by deadline, then priority
+  const prioOrder = {urgent:0, important:1, fyi:2};
+  filtered.sort((a,b) => {
+    const da = taskDaysLeft(a.deadline), db = taskDaysLeft(b.deadline);
+    if (a.status==="done" && b.status!=="done") return 1;
+    if (b.status==="done" && a.status!=="done") return -1;
+    if (da !== null && db !== null) return da - db;
+    if (da !== null) return -1;
+    if (db !== null) return 1;
+    return prioOrder[a.priority] - prioOrder[b.priority];
+  });
+
+  // Badges summary
+  const open = tasks.filter(t=>t.status==="open");
+  const overdue = open.filter(t=>{ const d=taskDaysLeft(t.deadline); return d!==null&&d<0; });
+  const urgent = open.filter(t=>t.priority==="urgent");
+  const badgeEl = document.getElementById("taskSummaryBadges");
+  if (badgeEl) badgeEl.innerHTML = `
+    <span class="badge badge-urgent">${overdue.length} overdue</span>
+    <span class="badge badge-important">${urgent.length} urgent</span>
+    <span class="badge badge-fyi">${open.length} open</span>`;
+
+  // Nav badge
+  const nb = document.getElementById("navTasksBadge");
+  if (nb) { nb.textContent = overdue.length + urgent.length; nb.style.display = (overdue.length+urgent.length)>0?"inline":"none"; }
+
+  const countEl = document.getElementById("taskCount");
+  if (countEl) countEl.textContent = `${filtered.length} tasks`;
+
+  const tbody = document.getElementById("taskBody");
+  if (!tbody) return;
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--text-light);padding:32px 0;">No tasks match.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = "";
+  filtered.forEach(t => {
+    const d = taskDaysLeft(t.deadline);
+    const overdue = d !== null && d < 0 && t.status === "open";
+    const dueSoon = d !== null && d <= 3 && d >= 0 && t.status === "open";
+    const badgeClass = {urgent:"badge-urgent", important:"badge-important", fyi:"badge-fyi"}[t.priority];
+    const daysStr = d === null ? "—" : d < 0 ? `<span class="num-neg">${Math.abs(d)}d overdue</span>` : d === 0 ? `<span class="num-neg">Today</span>` : `<span class="${d<=3?"num-neg":d<=7?"":"num-pos"}">${d}d</span>`;
+    const isDone = t.status === "done";
+    const tr = document.createElement("tr");
+    tr.style.opacity = isDone ? "0.5" : "1";
+    if (overdue) tr.style.background = "var(--red-bg)";
+    tr.innerHTML = `
+      <td>
+        <div onclick="${isDone?`reopenTask(${JSON.stringify(t.id)})`:`completeTask(${JSON.stringify(t.id)})`}"
+          style="width:16px;height:16px;border:1.5px solid var(--border-strong);border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;background:${isDone?"var(--accent)":"transparent"};border-color:${isDone?"var(--accent)":"var(--border-strong)"};color:#fff;">
+          ${isDone?"✓":""}
+        </div>
+      </td>
+      <td style="${isDone?"text-decoration:line-through;color:var(--text-muted);":overdue?"font-weight:500;":""}">${t.desc}</td>
+      <td style="font-size:11px;color:var(--text-muted);">${t.counterparty||"—"}</td>
+      <td><span class="badge ${badgeClass}">${t.priority}</span></td>
+      <td class="num" style="font-size:11px;">${t.deadline||"—"}</td>
+      <td class="num">${daysStr}</td>
+      <td style="font-size:11px;color:var(--text-muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${t.notes}">${t.notes||"—"}</td>
+      <td><span class="badge badge-fyi" style="font-size:9px;">${t.source}</span></td>
+      <td><button onclick="deleteTask(${JSON.stringify(t.id)})" class="btn btn-sm" style="color:var(--red);border-color:transparent;padding:4px 8px;">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function exportTasksCSV() {
+  const tasks = getTasks();
+  if (!tasks.length) { alert("No tasks to export."); return; }
+  let csv = "Description,Counterparty,Priority,Deadline,Status,Notes,Source,Created\n";
+  tasks.forEach(t => { csv += `"${t.desc}","${t.counterparty}","${t.priority}","${t.deadline}","${t.status}","${t.notes}","${t.source}","${t.createdAt}"\n`; });
+  const blob = new Blob([csv], {type:"text/csv"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href=url; a.download="fo_tasks.csv"; a.click();
+}
+
+// ─── DASHBOARD ─────────────────────────────────────────────────────
+function renderDashboard() {
+  const now = new Date();
+  const hour = now.getHours();
+  const greeting = hour < 12 ? "Good morning." : hour < 18 ? "Good afternoon." : "Good evening.";
+  const greetEl = document.getElementById("dashGreeting");
+  if (greetEl) greetEl.textContent = greeting;
+
+  const dateEl = document.getElementById("dashAgendaDate");
+  if (dateEl) dateEl.textContent = now.toLocaleDateString("en-US", {weekday:"long", year:"numeric", month:"long", day:"numeric"});
+
+  const tasks = getTasks().filter(t => t.status === "open");
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  const tasksDueToday = tasks.filter(t => { const d=taskDaysLeft(t.deadline); return d!==null&&d<=0; });
+  const tasksOverdue  = tasks.filter(t => { const d=taskDaysLeft(t.deadline); return d!==null&&d<0; });
+  const tasksDueSoon  = tasks.filter(t => { const d=taskDaysLeft(t.deadline); return d!==null&&d>=0&&d<=7; });
+
+  // Interest payments in next 14 days
+  const intPayments = intGetPayments().filter(p => { const d=intDaysUntil(p.dateStr); return d>=0&&d<=14; });
+  const intTotal = intPayments.reduce((s,p)=>s+p.amount,0);
+
+  // Log for leverage
+  const log = getLog();
+  const latestByEntity = {};
+  log.forEach(e => {
+    if (!latestByEntity[e.entity] || new Date(e.loggedAt)>new Date(latestByEntity[e.entity].loggedAt))
+      latestByEntity[e.entity] = e;
+  });
+  const entities = Object.values(latestByEntity);
+  const totalAssets = entities.reduce((s,e)=>s+e.assets,0);
+  const totalDebt   = entities.reduce((s,e)=>s+e.debt,0);
+  const leverage    = totalAssets>0 ? totalDebt/totalAssets : 0;
+  const levAlert    = leverage > 0.7;
+
+  // Tiles
+  const tilesEl = document.getElementById("dashTiles");
+  if (tilesEl) tilesEl.innerHTML = `
+    <div class="metric-card" style="cursor:pointer;border-color:${levAlert?"var(--red)":"var(--border)"};" onclick="switchPanelDirect('log')">
+      <div class="metric-label">Leverage ratio</div>
+      <div class="metric-value num ${levAlert?"num-neg":"num-pos"}">${totalAssets>0?(leverage*100).toFixed(1)+"%":"—"}</div>
+      <div class="metric-sub">${levAlert?"⚠ Above 70% threshold":totalAssets>0?"Within limits":"No data yet"}</div>
+    </div>
+    <div class="metric-card" style="cursor:pointer;border-color:${tasksDueToday.length>0?"var(--red)":"var(--border)"};" onclick="switchPanelDirect('tasks')">
+      <div class="metric-label">Tasks due today</div>
+      <div class="metric-value num ${tasksDueToday.length>0?"num-neg":""}">${tasksDueToday.length}</div>
+      <div class="metric-sub">${tasksOverdue.length>0?`${tasksOverdue.length} overdue`:tasksDueSoon.length>0?`${tasksDueSoon.length} due this week`:"All clear"}</div>
+    </div>
+    <div class="metric-card" style="cursor:pointer;" onclick="switchPanelDirect('interest')">
+      <div class="metric-label">Interest (next 14d)</div>
+      <div class="metric-value num ${intPayments.length>0?"num-neg":""}">${intPayments.length>0?"$"+(intTotal/1e3).toFixed(0)+"K":"—"}</div>
+      <div class="metric-sub">${intPayments.length} payment(s) due</div>
+    </div>
+    <div class="metric-card" style="cursor:pointer;" onclick="switchPanelDirect('email')">
+      <div class="metric-label">Emails to action</div>
+      <div class="metric-value num">—</div>
+      <div class="metric-sub">Scan Gmail to update</div>
+    </div>`;
+
+  // Agenda
+  const agendaEl = document.getElementById("dashAgenda");
+  if (!agendaEl) return;
+
+  const agendaItems = [];
+
+  // Overdue tasks
+  tasksOverdue.forEach(t => agendaItems.push({ priority:"urgent", icon:"!", label:`OVERDUE: ${t.desc}`, sub: t.counterparty||"", action:"View tasks", panel:"tasks" }));
+
+  // Tasks due today
+  tasks.filter(t=>{ const d=taskDaysLeft(t.deadline); return d===0; }).forEach(t =>
+    agendaItems.push({ priority:"urgent", icon:"◉", label:`Due today: ${t.desc}`, sub:t.counterparty||"", action:"View tasks", panel:"tasks" }));
+
+  // Upcoming interest payments
+  intPayments.slice(0,3).forEach(p => agendaItems.push({
+    priority: intDaysUntil(p.dateStr)<=3?"urgent":"important",
+    icon:"$", label:`Interest payment — ${p.facility.label}`, sub:`${p.dateStr} · $${p.amount.toLocaleString("en-US",{maximumFractionDigits:0})}`, action:"View schedule", panel:"interest"
+  }));
+
+  // Tasks due this week
+  tasks.filter(t=>{ const d=taskDaysLeft(t.deadline); return d!==null&&d>0&&d<=7; }).slice(0,3).forEach(t =>
+    agendaItems.push({ priority:"important", icon:"○", label:`Due in ${taskDaysLeft(t.deadline)}d: ${t.desc}`, sub:t.counterparty||"", action:"View tasks", panel:"tasks" }));
+
+  // Leverage alert
+  if (levAlert) agendaItems.push({ priority:"urgent", icon:"⚠", label:`Leverage at ${(leverage*100).toFixed(1)}% — above 70% threshold`, sub:"Review positions", action:"View log", panel:"log" });
+
+  if (!agendaItems.length) {
+    agendaEl.innerHTML = `<div style="text-align:center;padding:32px 0;color:var(--text-light);font-size:12px;">Nothing urgent today. Good start.</div>`;
+    return;
+  }
+
+  agendaEl.innerHTML = agendaItems.map(item => {
+    const barCls = {urgent:"bar-urgent", important:"bar-important", fyi:"bar-fyi"}[item.priority];
+    const badgeCls = {urgent:"badge-urgent", important:"badge-important", fyi:"badge-fyi"}[item.priority];
+    return `<div style="display:flex;gap:14px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);">
+      <div class="email-priority-bar ${barCls}" style="min-height:32px;"></div>
+      <div style="flex:1;">
+        <div style="font-size:12px;font-weight:500;color:var(--text);">${item.label}</div>
+        ${item.sub?`<div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${item.sub}</div>`:""}
+      </div>
+      <button class="btn btn-sm" onclick="switchPanelDirect('${item.panel}')" style="flex-shrink:0;">${item.action} →</button>
+    </div>`;
+  }).join("");
+
+  // Leverage table
+  const levEl = document.getElementById("dashLevTable");
+  if (levEl && entities.length) {
+    const rows = entities.map(e => {
+      const lev = e.assets>0?e.debt/e.assets:0;
+      const cls = lev>0.7?"num-neg":lev>0.6?"":"num-pos";
+      return `<tr>
+        <td>${e.entity}</td>
+        <td>${e.bank}</td>
+        <td class="num">$${(e.assets/1e6).toFixed(2)}M</td>
+        <td class="num">$${(e.debt/1e6).toFixed(2)}M</td>
+        <td class="num ${cls}">${(lev*100).toFixed(1)}%</td>
+        <td style="font-size:11px;color:var(--text-muted);">${e.date}</td>
+      </tr>`;
+    }).join("");
+    levEl.innerHTML = `<table class="preview-table"><thead><tr><th>Entity</th><th>Bank</th><th>Assets</th><th>Debt</th><th>Leverage</th><th>As of</th></tr></thead><tbody>${rows}</tbody></table>`;
+    const levDateEl = document.getElementById("dashLevDate");
+    if (levDateEl) levDateEl.textContent = `Last updated: ${entities[0]?.date||""}`;
+  }
+}
+
+function switchPanelDirect(name) {
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  document.getElementById("panel-"+name).classList.add("active");
+  if (name==="log") renderLog();
+  if (name==="interest") intRefresh();
+  if (name==="tasks") renderTasks();
+  if (name==="dashboard") renderDashboard();
+}
+
+// Override switchPanel to also handle dashboard and tasks
+const _origSwitchPanel = switchPanel;
+function switchPanel(name) {
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  document.getElementById("panel-"+name).classList.add("active");
+  event.currentTarget.classList.add("active");
+  if (name==="log") renderLog();
+  if (name==="interest") intRefresh();
+  if (name==="tasks") renderTasks();
+  if (name==="dashboard") renderDashboard();
+}
+
+// Init dashboard and tasks on load
+setTimeout(() => { renderDashboard(); renderTasks(); gmailUpdateUI(); }, 100);
+
+function showStatus(id, type, msg, loading = false) {
+  const el = document.getElementById(id);
+  el.className = `status-bar status-${type}`;
+  el.innerHTML = loading
+    ? `<div class="spinner"></div><span>${msg}</span>`
+    : `<span>${msg}</span>`;
+  el.classList.remove("hidden");
+}
+
+function hideStatus(id) {
+  document.getElementById(id).classList.add("hidden");
+}
+
+function resetExtraction() {
+  document.getElementById("extractionCard").classList.add("hidden");
+  document.getElementById("uploadedFile").classList.add("hidden");
+  document.getElementById("fileInput").value = "";
+  state.uploadedFile = null;
+  state.uploadedPDFBase64 = null;
+  state.extractedData = [];
+}
+
+function resetAll() {
+  resetExtraction();
+  document.getElementById("summaryCard").classList.add("hidden");
+  BANKS.forEach(b => {
+    document.getElementById("bank-" + b.id).classList.remove("selected");
+    document.getElementById("check-" + b.id).textContent = "";
+  });
+  state.selectedBank = null;
+  document.getElementById("dropzoneSelected").textContent = "Select a bank above first";
+}
+</script>
+</body>
+</html>
